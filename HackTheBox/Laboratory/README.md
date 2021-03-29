@@ -45,6 +45,6 @@ So we can see port 80 redirect to ```https://laboratory.htb/``` and we can see t
 ```
 
 
-## Laboratory is still active machine - [Full writeup](Laboratory-Writeup.pdf) avaliable with root password only.
+## Laboratory is still active machine -  avaliable with root password only.
 
 [@evyatar9](https://t.me/evyatar9)
