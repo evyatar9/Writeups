@@ -31,6 +31,7 @@ Accept-Encoding: gzip, deflate
 Accept-Language: he-IL,he;q=0.9,en-US;q=0.8,en;q=0.7
 Connection: close
 
+
 ```
 
 Let's try to use [Repeater](https://portswigger.net/burp/documentation/desktop/tools/repeater/using) to change the ```User-Agent``` to ```PicoBrowser```:
@@ -63,7 +64,7 @@ Using the following [Browser-language-codes](https://www.metamodpro.com/browser-
 
 ![burpaccept.JPG](images/burpaccept.JPG)
 
-And we get the flag: ```picoCTF{http_h34d3rs_v3ry_c0Ol_much_w0w_0c0db339}``` using the following request:
+And we get the flag: ```picoCTF{http_h34d3rs_v3ry_c0Ol_much_w0w_0c0db339}``` using the following http request:
 ```http
 GET / HTTP/1.1
 Host: mercury.picoctf.net:52362
@@ -78,6 +79,5 @@ Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/a
 Accept-Encoding: gzip, deflate
 Accept-Language: sv-sv,sv;q=0.9,en-US;q=0.8,en;q=0.7
 Connection: close
-
 
 ```
