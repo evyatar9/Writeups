@@ -64,7 +64,7 @@ scanf("%300s", user_buf);
 printf(user_buf);
 ```
 
-And we can see the user input printed by ```printf(user_buf);```, It's mean we can use [Format String Vuln.](https://www.exploit-db.com/docs/english/28476-linux-format-string-exploitation.pdf) to print ```api_buf``` buffer from stack using ```%08x``` - which print one value from stack.
+And we can see the user input printed by ```printf(user_buf);``` function, It's mean we can use [Format String Vuln.](https://www.exploit-db.com/docs/english/28476-linux-format-string-exploitation.pdf) to print ```api_buf``` buffer from stack using ```%08x``` - which print one value from stack.
 
 So let's try it:
 ```console
