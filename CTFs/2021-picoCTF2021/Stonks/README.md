@@ -53,9 +53,9 @@ int buy_stonks(Portfolio *p) {
 }
 ```
 
-The function above copy the flag copy to ```api_buf``` buffer using ```fgets(api_buf, FLAG_BUFFER, f);```.
+The function above copy the flag to ```api_buf``` buffer using ```fgets(api_buf, FLAG_BUFFER, f);```.
 
-Then, The function ask for user input:
+Then, The function ask for "API token":
 ```c
 ...
 printf("What is your API token?\n");
