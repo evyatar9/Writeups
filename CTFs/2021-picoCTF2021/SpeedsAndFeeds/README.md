@@ -9,7 +9,6 @@ Reverse Engineering, 50 Points
 
 By connecting to ```nc mercury.picoctf.net 1652``` we get the following:
 ```console
-```console
 ┌─[evyatar@parrot]─[/pico2021/SpeedsAndFeeds] 
 └──╼ $ nc mercury.picoctf.net 1652
 G17 G21 G40 G90 G64 P0.003 F50
