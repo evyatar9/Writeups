@@ -1124,7 +1124,7 @@ G0Z0.1
 
 ```
 
-So by simply google searc we can see the output is CNC Gcode [https://www.steckermachine.com/blog/g-code-m-code](https://www.steckermachine.com/blog/g-code-m-code), Let's try to copy the [output](output) to online CNC tool [https://ncviewer.com/](https://ncviewer.com/):
+So by simply google search we can see the output is CNC Gcode [https://www.steckermachine.com/blog/g-code-m-code](https://www.steckermachine.com/blog/g-code-m-code), Let's try to copy the [output](output) to online CNC tool [https://ncviewer.com/](https://ncviewer.com/):
 
 ![ncviewer.JPG](images/ncviewer.JPG)
 
