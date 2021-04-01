@@ -47,4 +47,6 @@ So we can see port 80 redirect to ```https://laboratory.htb/``` and we can see t
 
 ## Laboratory is still active machine -  avaliable with root password only.
 
-[@evyatar9](https://t.me/evyatar9)
+Telegram: [@evyatar9](https://t.me/evyatar9)
+
+Discord: [evyatar9](https://discordapp.com/users/812805349815091251)
