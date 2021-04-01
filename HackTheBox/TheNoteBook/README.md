@@ -68,5 +68,6 @@ Progress: 114644 / 220561 (51.98%)^C[A
 
 ## TheNoteBook is still active machine - [Full writeup](TheNoteBook-Writeup.pdf) avaliable with root password only.
 
+Telegram: [@evyatar9](https://t.me/evyatar9)
 
-[@evyatar9](https://t.me/evyatar9)
+Discord: [evyatar9](https://discordapp.com/users/812805349815091251)
