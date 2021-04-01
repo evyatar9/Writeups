@@ -33,7 +33,7 @@ Nmap done: 1 IP address (1 host up) scanned in 12.52 second
 Let's see what port ```5000``` contains:
 
 ![port5000.JPG](images/port5000.JPG)
-
+ 
 ## ScriptKiddie is still active machine - [Full writeup](ScriptKiddie-Writeup.pdf) avaliable with root password only.
 
 Telegram: [@evyatar9](https://t.me/evyatar9)
