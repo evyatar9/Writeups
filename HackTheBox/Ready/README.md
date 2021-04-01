@@ -41,4 +41,6 @@ Let's browse to ```http://10.10.10.220:5080``` and register to Gitlab:
 
 ## Ready is still active machine - [Full writeup](Ready-Writeup.pdf) avaliable with root password only.
 
-[@evyatar9](https://t.me/evyatar9)
+Telegram: [@evyatar9](https://t.me/evyatar9)
+
+Discord: [evyatar9](https://discordapp.com/users/812805349815091251)
