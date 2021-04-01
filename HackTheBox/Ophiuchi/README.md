@@ -34,7 +34,7 @@ Let's try to browse this port:
 
 ![port8080.JPG](images/port8080.JPG)
 
-
+ 
 ## Ophiuchi is still active machine - [Full writeup](Ophiuchi-Writeup.pdf) avaliable with root password only.
 
 Telegram: [@evyatar9](https://t.me/evyatar9)
