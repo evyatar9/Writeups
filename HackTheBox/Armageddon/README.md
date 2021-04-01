@@ -45,4 +45,6 @@ Let's try to observe port 80:
 
 ## Armageddon is still active machine - [Full writeup](Armageddon-Writeup.pdf) avaliable with root password only.
 
-[@evyatar9](https://t.me/evyatar9)
+Telegram: [@evyatar9](https://t.me/evyatar9)
+
+Discord: [evyatar9](https://discordapp.com/users/812805349815091251)
