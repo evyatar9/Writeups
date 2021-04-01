@@ -38,7 +38,7 @@ Nmap done: 1 IP address (1 host up) scanned in 18.27 seconds
 Let's browse to ```http://10.10.10.220:5080``` and register to Gitlab:
 
 ![port5080.JPG](images/port5080.JPG)
-
+ 
 ## Ready is still active machine - [Full writeup](Ready-Writeup.pdf) avaliable with root password only.
 
 Telegram: [@evyatar9](https://t.me/evyatar9)
