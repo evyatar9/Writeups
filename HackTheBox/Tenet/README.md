@@ -66,4 +66,6 @@ by OJ Reeves (@TheColonial) & Christian Mehlmauer (@_FireFart_)
 
 ## Tenet is still active machine - [Full writeup](Tenet-Writeup.pdf) avaliable with root password only.
 
-[@evyatar9](https://t.me/evyatar9)
+Telegram: [@evyatar9](https://t.me/evyatar9)
+
+Discord: [evyatar9](https://discordapp.com/users/812805349815091251)
