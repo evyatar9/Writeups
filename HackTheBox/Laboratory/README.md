@@ -222,7 +222,9 @@ uJvh4tAHnotmkAAAAPcm9vdEBsYWJvcmF0b3J5AQIDBA==
 -----END OPENSSH PRIVATE KEY-----
 ```
 
-Let's save it in file called ```id_rsa``` and connect to ```ssh``` using this ```dexter``` ssh private key file:
+Let's save it in file called ```id_rsa```.
+
+Now, We can use ```ssh``` with dexter private key file:
 
 ```console
 ┌─[evyatar@parrot]─[/hackthebox/Laboratory]
@@ -314,7 +316,7 @@ dircolors: command not found
 root@laboratory:/tmp#
 ````
 
-Not we need to use ```cat``` command, So let's change again the ```PATH``` and print the root flag:
+Now, we need to use ```cat``` command, So let's change again the ```PATH``` and print the root flag:
 ```console
 root@laboratory:/tmp# export PATH=/usr/bin
 export PATH=/usr/bin
