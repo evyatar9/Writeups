@@ -4,6 +4,8 @@ Writeups for [CTF HackTheBox 2021 Cyber Apocalypse 2021](https://www.hackthebox.
 
 5 DAY CTF!
 
+![certificate2.JPG](images/certificate2.JPG)
+
 Images:
 
 ![ctf.gif](images/ctf.gif)
