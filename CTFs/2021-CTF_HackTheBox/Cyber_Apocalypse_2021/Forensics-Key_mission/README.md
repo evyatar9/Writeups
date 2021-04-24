@@ -1,6 +1,6 @@
 # CTF HackTheBox 2021 Cyber Apocalypse 2021 - Key Mission
 
-Forensics: Pwn, Points: 300
+Forensics: Forensics, Points: 325
 
 ![info.JPG](images/info.JPG)
 
