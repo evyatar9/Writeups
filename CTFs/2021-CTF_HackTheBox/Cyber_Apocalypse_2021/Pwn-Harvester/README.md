@@ -10,7 +10,7 @@ Attached file [pwn_harvester.zip](pwn_harvester.zip)
 # Harvester Solution
 
 Let's check the binary using ```checksec```:
-```
+```console
 ┌─[evyatar@parrot]─[/ctf_htb/cyber_apocalypse/pwn/harvester]
 └──╼ $ checksec harvester
     Arch:     amd64-64-little
@@ -74,7 +74,7 @@ We can see that we can get buffer overflow on ```read(0,local_38,0x40);```, It's
 
 We can get this overflow only if ```pie === 0x16```, The function make ```pie = pie + 1;``` before.
 
-The sechind function is ```inventory```:
+The second function is ```inventory```:
 ```c
 void inventory(void)
 
