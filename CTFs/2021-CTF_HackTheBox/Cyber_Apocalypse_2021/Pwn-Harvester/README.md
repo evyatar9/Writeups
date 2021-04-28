@@ -614,7 +614,7 @@ p.interactive()
 ```
 
 Let's just put everything together [exploit.py](exploit.py):
-```console
+```python
 from pwn import *
 
 binary = context.binary = ELF('./harvester')
@@ -676,7 +676,7 @@ p.interactive()
 Run it with REMOTE=1:
 ```console
 ┌─[evyatar@parrot]─[/ctf_htb/cyber_apocalypse/pwn/harvester]
-└──╼ $ python exploit.py
+└──╼ $ python exploit.py REMOTE=1
 [*] '/ctf_htb/cyber_apocalypse/pwn/harvester/harvester'
     Arch:     amd64-64-little
     RELRO:    Full RELRO
