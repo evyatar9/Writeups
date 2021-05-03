@@ -76,7 +76,7 @@ void tls_callback_0(void)
 
 So It's look like the executable dynamic load ```xuTaV.dll``` file and call to ```encryptFiles``` function.
 
-We need to find ```xuTaV.dll`` file, Let's run the binary using IDA to look at ```fopen``` file argument.
+We need to find ```xuTaV.dll``` file, Let's run the binary using IDA to look at ```fopen``` file argument.
 
 By searching the string ```xuTaV.dll``` I got the following function in ```TlsCallback_0```:
 

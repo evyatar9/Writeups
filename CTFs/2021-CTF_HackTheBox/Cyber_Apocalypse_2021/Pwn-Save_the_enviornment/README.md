@@ -379,7 +379,7 @@ Run it:
     NX:       NX enabled
     PIE:      No PIE (0x400000)
 [+] Opening connection to 138.68.141.182 on port 31076: Done
-[*] '/pwd/datajerk/cyberapocalypsectf2021/save_the_environment/libc.so.6'
+[*] '/ctf_htb/cyber_apocalypse/pwn/environment/environment/libc.so.6'
     Arch:     amd64-64-little
     RELRO:    Partial RELRO
     Stack:    Canary found
