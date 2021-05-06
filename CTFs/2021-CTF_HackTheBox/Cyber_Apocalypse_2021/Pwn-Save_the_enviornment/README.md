@@ -221,7 +221,7 @@ void hidden_resources(void)
 }
 ```
 
-So we can make this function called and to get [ret2win](https://int0x33.medium.com/day-1-rop-emporium-ret2win-64bit-bb0d1893a3b0).
+So we can call this ```hidden_resources``` function and get [ret2win](https://int0x33.medium.com/day-1-rop-emporium-ret2win-64bit-bb0d1893a3b0).
 
 According the information we have so far we can:
 1. Leak ```libc``` address with ```printf``` leak address ( ```printf("[%p]\n",printf);``` - from ```form``` function).
