@@ -10,4 +10,4 @@ And attached file [epic_game.zip](epic_game.zip)
 
 ## Epic Game Solution
 
-Cooming Soon... :)
+Coming Soon... :)
