@@ -10,4 +10,4 @@ And attached file [anti](anti)
 
 ## Anti Solution
 
-Cooming Soon... :)
+Coming Soon... :)
