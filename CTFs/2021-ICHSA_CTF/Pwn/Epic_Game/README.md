@@ -370,7 +370,7 @@ We can see ```luck``` get the address of ```rand``` function - so we have a leak
 
 We have leak address from libc, We have overflow and our plan is to overwrite ```puts``` function from GOT, So let's start.
 
-### Step 1: Send /bin/sh as name, leak rand libc address
+### Step 1: Send /bin/sh as name, leak rand libc address ([./exploit.py#L1-L21](./exploit.py#L1-L21))
 ```python
 from pwn import *
 
@@ -399,7 +399,7 @@ with log.progress("Step 1: Send /bin/sh as name"):
 We send ```/bin/sh``` as name thats because we overwrite ```puts```, the first call of ```puts``` (after buffer overwrite) is ```puts(current_player.name);``` (line 145) so actually if we overwrite ```puts``` with ```system``` it's lead the name to be the argument of ```system``` which is ```/bin/sh```.
 
 
-### Step 2: Leak lib address from current_player.name
+### Step 2: Leak lib address from current_player.name ([./exploit.py#L22-L29](./exploit.py#L22-L29))
 ```python
 # Leak libc address from current_player.luck
 with log.progress("Step 2: Leak lib address"):
@@ -413,7 +413,7 @@ with log.progress("Step 2: Leak lib address"):
 Read the leak address of ```libc``` and calculate the address of ```libc```.
 
 
-### Step 3: Flood ```error_log``` to make curr=1032
+### Step 3: Flood ```error_log``` to make curr=1032 ([./exploit.py#L30-L34](./exploit.py#L30-L34))
 
 ```python
 # Get error_log limit by sending 515 * A twice (to make curr=1032)
@@ -426,7 +426,7 @@ We send ```512bytes + \n + 512bytes + \n``` to make ```curr=1032```.
 
 As described before, If ```curr=1032``` so the address of ```error_log+curr``` is the address of ```curr``` and it's allow us to overwrite ```curr``` with ```puts``` address.
 
-### Step 4: Overwrite curr with puts address and overwrite puts with system
+### Step 4: Overwrite curr with puts address and overwrite puts with system ([./exploit.py#L35-L40](./exploit.py#L35-L40))
 
 ```python
 # Write into curr the address of puts (minus 9 bytes we just written) and overwrite puts GOT with system
