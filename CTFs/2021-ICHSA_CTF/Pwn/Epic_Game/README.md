@@ -3,20 +3,21 @@ Category: PWN, 350 Points
 
 ## Description
 
-
 ![‏‏image.JPG](images/image.JPG)
  
 And attached file [epic_game.zip](epic_game.zip)
 
 ## Epic Game Solution
 
+Reference: [https://github.com/0xbigshaq/ctf-stuff/tree/main/2021/ICHSA-CTF/pwn/EpicGame](https://github.com/0xbigshaq/ctf-stuff/tree/main/2021/ICHSA-CTF/pwn/EpicGame).
+
 
 Let's get information about the compiled binary ```app.out``` which included in the attached zip file using checksec:
 
 ```console
-┌─[evyatar@parrot]─[/ichsa2021/reversing/epicgame] 
+┌─[evyatar@parrot]─[/ichsa2021/pwn/epicgame] 
 └──╼ $ checksec app.out
-[*] '/ichsa2021/reversing/epicgame'
+[*] '/ichsa2021/pwn/epicgame'
     Arch:     amd64-64-little
     RELRO:    Partial RELRO
     Stack:    Canary found
@@ -28,7 +29,7 @@ We can see 64bit file, [Partial RELRO](https://ctf101.org/binary-exploitation/re
 
 Let's try to run the binary:
 ```console
-┌─[evyatar@parrot]─[/ichsa2021/reversing/epicgame] 
+┌─[evyatar@parrot]─[/ichsa2021/pwn/epicgame] 
 └──╼ $ ./app.out
 Hello epic warrior, it's time to begin your quest
 
@@ -77,7 +78,7 @@ You were a brave warrior but not enough to get a flag
 
 Let's try to debug it using gdb:
 ```asm
-┌─[evyatar@parrot]─[/ichsa2021/reversing/epicgame] 
+┌─[evyatar@parrot]─[/ichsa2021/pwn/epicgame] 
 └──╼ $gdb app.out
 gef➤  pattern create 512
 [+] Generating a pattern of 512 bytes
@@ -487,9 +488,9 @@ p.interactive()
 
 Run it:
 ```console
-┌─[evyatar@parrot]─[/ichsa2021/reversing/epicgame] 
+┌─[evyatar@parrot]─[/ichsa2021/pwn/epicgame] 
 └──╼ $ python3 exploit.py REMOTE
-[*] '/ichsa2021/reversing/epicgame/app.out'
+[*] '/ichsa2021/pwn/epicgame/app.out'
     Arch:     amd64-64-little
     RELRO:    Partial RELRO
     Stack:    Canary found
