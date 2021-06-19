@@ -184,7 +184,7 @@ PORT     STATE SERVICE
 Nmap done: 1 IP address (1 host up) scanned in 311.96 second
 ```
 
-So by google search about wpad we can get the following article: [wpad](https://en.wikipedia.org/wiki/Web_Proxy_Auto-Discovery_Protocol).
+So by google search about wpad we can get the following article: [https://en.wikipedia.org/wiki/Web_Proxy_Auto-Discovery_Protocol](https://en.wikipedia.org/wiki/Web_Proxy_Auto-Discovery_Protocol).
 
 According the article above we know about config file which called ```wpad.dat```, Let's try to get this file by using curl:
 ```console
