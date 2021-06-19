@@ -206,7 +206,7 @@ function FindProxyForURL(url, host) {
 }
 ```
 
-So from [isInNet](https://docs.oracle.com/cd/E19575-01/821-0053/adyrv/index.html) function we can understand that ```10.197.243.0``` , ```10.241.251.0``` both are ip ranges, Let's try nmap the first range (It's take around 15-20 min):
+From [isInNet](https://docs.oracle.com/cd/E19575-01/821-0053/adyrv/index.html) function we can understand that ```10.197.243.0``` , ```10.241.251.0``` both are ip ranges, Let's try ```nmap``` scan with the first range (It's take around 15-20 min):
 
 ```console
 ┌─[evyatar@parrot]─[/hackthebox/Tentacle]
