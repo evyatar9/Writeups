@@ -3,7 +3,7 @@ Windows, 40 Base Points, Hard
 
 ## Machine
 
-![‏‏Breadcrumbs.JPG](images/breadcrumbs.JPG)
+![‏‏Breadcrumbs.JPG](images/Breadcrumbs.JPG)
  
 ## Breadcrumbs Solution
 
