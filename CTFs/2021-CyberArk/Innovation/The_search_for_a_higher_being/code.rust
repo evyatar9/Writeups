@@ -1,0 +1,83 @@
+extern crate base64;
+use std::str;
+
+// While exploring the surface of the red planet, you stumble upon an encrypted message, which might prove there's a life on this planet!
+// After some sand digging, you found a rune, indicating the following:
+// CMObw5jDlMOdw6JKK8OXw5TDocOUSg== | aliens? here?
+// You are trying to build a cypher reader, but something is not quite right.
+// What could this all mean?
+//
+
+trait IAbstractDecryptor {
+    fn a(&self, msg: String) -> Vec<u8>;
+    fn b(&self, b: Vec<u8>) -> String;
+    fn c(&self, i: Vec<u8>) -> Vec<u8>;
+    fn d(&self, by: Vec<u8>) -> String;
+    fn e(&self, message: String) -> String;
+}
+
+trait IBaseDecryptor: IAbstractDecryptor {
+    fn howl_loudly(&self);
+}
+
+struct Decryptor();
+
+impl IAbstractDecryptor for Decryptor {
+    fn a(&self, msg: String) -> Vec<u8>{
+        return msg.into_bytes()
+
+    }
+
+    fn c(&self, i: Vec<u8>) -> Vec<u8> {
+        return base64::decode(&i).unwrap();
+    }
+
+    fn d(&self, by: Vec<u8>) -> String{
+        let c = self.c(by); 
+        let d = str::from_utf8(&c);
+        return d.unwrap().to_string()
+    }
+
+    fn e(&self, message: String) -> String{
+        let mut ss = String::from("");
+        for c in message.chars() {
+            let mut a = c as u32;
+            let mut b = 1;
+            let mut c = 0;
+            
+            while a > 0 {
+                let mut d = a % 10;
+                a /= 10;
+                if d == 0 {
+                    d = 10;
+                }
+                c = c + (d-1) * b;
+                b *= 10;
+            }
+            if c < 10 {
+                c += 90
+            }
+            ss.push(std::char::from_u32(c).unwrap())
+        }
+        return ss;
+    }
+
+    fn b(&self, b: Vec<u8>) -> String{
+        let c = self.d(b);
+        return self.e(c);
+    }
+}
+
+impl IBaseDecryptor for Decryptor {
+    fn howl_loudly(&self) {
+        println!("on va le chercher toute la journée!!!!!!!!");
+    }
+}
+
+fn main() {
+    let _msg:String = String::from("YsOXCMOjKwgrw5vDnsOlw5TDm8OoK8OTCMOo");
+    let decryptor = Decryptor();
+    let a = decryptor.a(_msg);
+    let extraterrestrial_msg = decryptor.b(a.clone());
+    println!("{}",extraterrestrial_msg);
+}

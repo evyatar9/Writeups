@@ -1,0 +1,12 @@
+image:
+  name: 904992888029.dkr.ecr.us-west-2.amazonaws.com/wayhome:latest
+  aws:
+    access-key: AKIA5FNOHSTOQECIOTPZ
+    secret-key: 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
+pipelines:
+  default:
+    - step:
+        script:
+          - ls /earth
+          - base64 -w0 /earth/coords.txt.gpg
+          - env
