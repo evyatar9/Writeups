@@ -39,4 +39,6 @@ UDYKNTAgNTAKMjU1Cv///////////////////////////////////////////////////////////wAA
 Which is the following image:
 ![clean.JPG](images/clean.JPG)
 
-Like that we can solve this challenge. 
+We can solve it by insert [solve.py](solve.py) code into the challenge info:
+
+![solve.JPG](images/solve.JPG)
