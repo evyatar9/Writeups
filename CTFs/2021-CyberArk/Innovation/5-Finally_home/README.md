@@ -671,7 +671,7 @@ Which is:
 ((wh ^ -1) & 240 | (wh & -241)) - 130
 ```
 
-So if we take a look at the calculates of the first three character we can see:
+So if we take a look at the calculates of the first three characters we can see:
 ```wat
 ((kh ^ -1) & 167 | (kh & -168)) - 193
 ((lh ^ -1) & 16 | (lh & -17)) - 32
