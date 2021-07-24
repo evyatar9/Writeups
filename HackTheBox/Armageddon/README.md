@@ -4,8 +4,6 @@ Linux, 20 Base Points, Easy
 ## Machine
 
 ![‏‏Armageddon.JPG](images/‏‏Armageddon.JPG)
- 
-## Armageddon Solution
 
 ### TL;DR;
 
@@ -19,6 +17,7 @@ From initial enumeration, we get a password hash for the ```brucetherealadmin```
 
 We are able to exploit this to create a backdoor account - ```dirty_sock```, and give it root access – which allowing access to get the root flag.
 
+## Armageddon Solution
 
 ### User
 
