@@ -7,6 +7,19 @@ Linux, 20 Base Points, Easy
  
 ## Armageddon Solution
 
+### TL;DR;
+
+To solve this machine, we begin by enumerating open services using ```namp``` – finding ports ```80``` and ```22```.
+
+***User***: From the webserver, we find a vulnerable on ```Drupal``` which let us RCE to get shell as ```apache``` user.
+ 
+From initial enumeration, we get a password hash for the ```brucetherealadmin``` from database, Using those credentials, we are able to use ```ssh``` and get the user flag.
+
+***Root***: By running ```sudo -l```, we learn we are able to install ```snap``` packages as root.
+
+We are able to exploit this to create a backdoor account - ```dirty_sock```, and give it root access – which allowing access to get the root flag.
+
+
 ### User
 
 So let's start with ```nmap``` scanning:
