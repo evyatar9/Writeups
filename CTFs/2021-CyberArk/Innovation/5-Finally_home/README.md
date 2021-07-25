@@ -14,7 +14,6 @@ If we are trying to insert bad input we get the following:
 
 ![badanswer.JPG](images/badanswer.JPG)
 
-
 By observing the source we can see the following Javascript:
 ```js
      const memory = new WebAssembly.Memory({ initial: 256, maximum: 256 });
