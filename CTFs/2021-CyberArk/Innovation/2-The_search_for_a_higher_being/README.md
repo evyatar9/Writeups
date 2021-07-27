@@ -217,7 +217,7 @@ What a lovely day
 
 Which is the flag.
 
-The final code [rust.c](rust.c):
+The final code [code.rust](code.rust):
 ```rust
 extern crate base64;
 use std::str;
