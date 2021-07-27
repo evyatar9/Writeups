@@ -10,7 +10,7 @@ Category: Innovation, Points: 60
 
 # We have a liftoff! - Solution
 
-According the description we need to send POST request to [https://v0tw7ojr02.execute-api.us-west-2.amazonaws.com/fireitup](https://v0tw7ojr02.execute-api.us-west-2.amazonaws.com/fireitup).
+According the challenge description we need to send HTTP POST request to [https://v0tw7ojr02.execute-api.us-west-2.amazonaws.com/fireitup](https://v0tw7ojr02.execute-api.us-west-2.amazonaws.com/fireitup).
 
 Let's send it using [BurpSuite](https://portswigger.net/burp):
 
@@ -40,7 +40,7 @@ Now we get the following response:
 
 ![b64.JPG](images/b64.JPG)
 
-From the ```Content-Type``` header we understand it's should be ```image/png``` (Base64 encoded).
+```Content-Type``` header says It's should be ```image/png``` (Base64 encoded) file.
 
 Let's save the response as file using ```curl```:
 ```console
@@ -51,7 +51,7 @@ Let's save the response as file using ```curl```:
     $'https://v0tw7ojr02.execute-api.us-west-2.amazonaws.com/fireitup' -o b64_image
 ```
 
-At this step we need to edit ```b64_image``` file - Remove all HTTP headers and remove the last character.
+At this step, we need to edit ```b64_image``` file - Remove all HTTP headers and remove the last character.
 
 Now, we are able to decode it as Base64:
 ```console
@@ -76,7 +76,7 @@ And as we can see our file header is:
 89 50 4E 47 0D 0A 1B 0A
 ```
 
-We can fix the PNG header using ```hexeditor``` - Change the 7th byte from ```1B``` to ```1A``` using ```hexeditor```.
+We can fix the PNG header using ```hexeditor``` - Change the 7th byte from ```1B``` to ```1A```.
 
 And now we can see the PNG file:
 ![flag.PNG](images/flag.PNG)
