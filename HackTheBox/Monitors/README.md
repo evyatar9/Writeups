@@ -9,7 +9,7 @@ Linux, 40 Base Points, Hard
 
 ### User
 
-Let's try with ```nmap``` scanning:
+Let's start with ```nmap``` scanning:
 
 ```console
 ┌─[evyatar@parrot]─[/hackthebox/Monitors]
