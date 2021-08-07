@@ -29,4 +29,4 @@ Please send your CV, the code '31/21' and your registered email to the challange
 Stay safe ;)
 ```
 
-And we finish the challenge.
+The flag is ```cyberm@cyber.gov.il```, By sending an email with CV we finish the challenge.
