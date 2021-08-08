@@ -72,7 +72,7 @@ Host script results:
 
 ```
 
-By observing port 80 [http://10.10.10.2480/](http://10.10.10.248/):
+By observing port 80 [http://10.10.10.248/](http://10.10.10.248/):
 
 ![port80.JPG](images/port80.JPG)
 
