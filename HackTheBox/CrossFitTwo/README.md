@@ -111,7 +111,7 @@ By observing port 80 [http://10.10.10.232/](http://10.10.10.232/):
 
 ![port80.JPG](images/port80.JPG)
 
-We can see on that page domain ```crossfit.htb```, And by clicking on "Member Area" (Top left) we got the following domain ```employees.crossfit.htb```., Let's add those domains to ```/etc/hosts```.
+We can see on that page domain ```crossfit.htb```, And by clicking on "Member Area" (Top left) we got the following domain ```employees.crossfit.htb```, Let's add those domains to ```/etc/hosts```.
 
 By browsing to [http://employees.crossfit.htb/](http://employees.crossfit.htb/) we got the following login page:
 
@@ -222,7 +222,7 @@ And the response is:
 {"status":"200","message":"Good news! This membership plan is available.","token":"f9f91016061754507be86c518dbe9c0973201e7219169cbfa370dc32b1e7f3ea","debug":"[id: 1, name: 1-month]"}
 ```
 
-Let's try SQL Injection against ```params``` key using ```sqlmap```, To do that, We can run [Flask](https://flask.palletsprojects.com/en/2.0.x/) web server which received ```sqlmap``` payload and send it using the WebSocket ([inject_server.py](scripts/inject_server.py):
+Let's try SQL Injection against ```params``` key using ```sqlmap```, To do that, We can run [Flask](https://flask.palletsprojects.com/en/2.0.x/) web server which received ```sqlmap``` payload and send it using the WebSocket ([inject_server.py](scripts/inject_server.py)):
 ```python
 from flask import Flask
 from flask import request
@@ -649,7 +649,7 @@ Run ```FakeDNS``` with the following configuration:
 A xemployees.crossfit.htb.* 127.0.0.1 2%10.10.14.14
 ```
 
-Means that  A record for ```xemployees.crossfit.htb.``` which evaluates to 127.0.0.1 for the first 2 tries
+Means that  ```A``` record for ```xemployees.crossfit.htb.``` which evaluates to 127.0.0.1 for the first 2 tries
 On the 3th request from a client which has already made 2 requests, FakeDNS starts serving out the second ip ```10.10.14.14``` which is our host.
 We need to add ```xemployees.crossfit.htb``` to ```/etc/hosts```.
 
@@ -1070,7 +1070,7 @@ crossfit2$ file /usr/local/bin/log
 /usr/local/bin/log: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /usr/libexec/ld.so, for OpenBSD, not stripped
 ```
 
-By decompile the ```main``` function on ```/usr/local/bin/log``` binary using ```Ghidra``` we can see that all functions are not contains code, The actually contains:
+By decompile the ```main``` function on ```/usr/local/bin/log``` binary using ```Ghidra``` we can see that all functions are not contains code, They actually contains:
 
 ![decompile.JPG](images/decompile.JPG)
 
@@ -1150,7 +1150,7 @@ For example, the system shell database, ```/etc/shells```, is held as ```/var/ba
 
 When this file is modified, it is renamed to ```/var/backups/etc_shells.backup``` and the new version becomes ```/var/backups/etc_shells.current```. Thereafter, these files are rotated.
 
-So according that ```/root/.ssh/id_rsa``` backed up to ```/var/backups/root_.ssh_id_rsa.current```, Because file will be on ```/var/backups``` and we can read any file on ```/var``` using ```/usr/local/bin/log``` we can read read the ```root``` private key:
+So according that ```/root/.ssh/id_rsa``` backed up to ```/var/backups/root_.ssh_id_rsa.current```, Because the file will be on ```/var/backups``` and we can read any file on ```/var``` using ```/usr/local/bin/log``` we can read read the ```root``` private key:
 ```console
 crossfit2$ /usr/local/bin/log /var/backups/root_.ssh_id_rsa.current
 
