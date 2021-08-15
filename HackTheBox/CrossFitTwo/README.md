@@ -9,11 +9,11 @@ OpenBSD, 50 Base Points, Insane
 
 To solve this machine, we begin by enumerating open services using ```namp``` – finding ports ```80```, ```22``` and ```8953``` (Unbound DNS Server).
 
-***<ins>User 1<ins>***: By enumerating port 80 we found javascript file called ```ws.min.js``` which contains code that communicate with WebSocket that located on [http://gym.crossfit.htb/ws](http://gym.crossfit.htb/ws), Next, We found that ```params``` key on that WebSocket message vulnerable to [SQL Injection](https://portswigger.net/web-security/sql-injection), Using ```sqlmap``` & ```flask``` web server we dump users from DB, Next, We saw that we have ```FILE``` permission on DB which allowed us to read files from server, using that, we read the file ```/etc/relayd.conf``` which tell us about new domain [crossfit-club.htb](http://crossfit-club.htb) and 	grabbing unbound secret keys, configuration files which will let us create DNS Entries on the box, using those configuration files we make [DNS rebinding attack](https://www.youtube.com/watch?v=y9-0lICNjOQ) by adding subdomain with ```TTL=2``` using [unbound-control](https://manpages.ubuntu.com/manpages/xenial/man8/unbound-control.8.html), Next we make [CSRF attack](https://portswigger.net/web-security/csrf) (using DNS rebinding attack) to communicate with another WebSocket (that located on [crossfit-club.htb](http://crossfit-club.htb)) which contains chat between users, By reading the messages between the users using CSRF attack we found the password of username ```David```. 
+***<ins>User 1<ins>***: By enumerating port 80 we found javascript file called ```ws.min.js``` which contains code that communicates with WebSocket that located on [http://gym.crossfit.htb/ws](http://gym.crossfit.htb/ws), Next, We found that ```params``` key on that WebSocket message vulnerable to [SQL Injection](https://portswigger.net/web-security/sql-injection), Using ```sqlmap``` & ```flask``` web server we dump users from DB, Next, We saw that we have ```FILE``` permission on DB which allowed us to read files from the server, using that, we read the file ```/etc/relayd.conf``` which tell us about new domain [crossfit-club.htb](http://crossfit-club.htb) and 	grabbing unbound secret keys, configuration files which will let us create DNS Entries on the box, using those configuration files we make [DNS rebinding attack](https://www.youtube.com/watch?v=y9-0lICNjOQ) by adding subdomain with ```TTL=2``` using [unbound-control](https://manpages.ubuntu.com/manpages/xenial/man8/unbound-control.8.html), Next we make [CSRF attack](https://portswigger.net/web-security/csrf) (using DNS rebinding attack) to communicate with another WebSocket (that located on [crossfit-club.htb](http://crossfit-club.htb)) which contains chat between users, By reading the messages between the users using CSRF attack we found the password of username ```David```. 
 
 ***<ins>User 2<ins>***: By running ```find``` to show files owned by our group (```sysadmins```) we found ```/opt/sysadmin``` directory that contains ```statbot.js``` file, According [Loading from node_modules folders](https://nodejs.org/api/modules.html#modules_loading_from_node_modules_folders) logic we can use library injection vulnerability to create file ```index.js``` on  ```/opt/sysadmin/node_modules``` directory with ```NodeJS``` reverse shell, Like that we got the user ```john```.
  
-***<ins>Root<ins>***: By running again ```find``` to show files owned by a group (```staff```) we found file ```/usr/local/bin/log```, By reversing this file using [Ghidra](https://ghidra-sre.org/) / [cutter](https://cutter.re/) / [IDA](https://hex-rays.com/ida-free/) we see system call [unveil](https://man.openbsd.org/unveil.2) which can set permissions at other points in the filesystem hierarchy, This function called as ```unevil("/var","r")``` meaning that we have read permission to all files on ```/var``` using ```/usr/local/bin/log``` binary, Using that we reading ```/etc/changelist``` and find that ```/root/.ssh/authorized_keys``` file backed up to ```/var/backups```, Using the root SSH private key - SSH is still asking for a password, By reading ```/etc/login.conf``` we found that the system have 2FA using [yubikey OpenBSD](https://www.straybits.org/post/2014/openbsd-yubikey/), Reading ```yubikey``` relevant files on ```/var/db/yubikey``` (using ```/usr/local/bin/log``` binary) allowed us to generate new token which use as password of root SSH.
+***<ins>Root<ins>***: By running again ```find``` to show files owned by a group (```staff```) we found file ```/usr/local/bin/log```, By reversing this file using [Ghidra](https://ghidra-sre.org/) / [cutter](https://cutter.re/) / [IDA](https://hex-rays.com/ida-free/) we see system call [unveil](https://man.openbsd.org/unveil.2) which can set permissions at other points in the filesystem hierarchy, This function called as ```unevil("/var","r")``` meaning that we have read permission to all files on ```/var``` using ```/usr/local/bin/log``` binary, Using that we reading ```/etc/changelist``` and find that ```/root/.ssh/authorized_keys``` file backed up to ```/var/backups```, Using the root SSH private key - SSH is still asking for a password, By reading ```/etc/login.conf``` we found that the system has 2FA using [yubikey OpenBSD](https://www.straybits.org/post/2014/openbsd-yubikey/), Reading ```yubikey``` relevant files on ```/var/db/yubikey``` (using ```/usr/local/bin/log``` binary) allowed us to generate the new token which uses as password of root SSH.
 
 
 ## CrossFitTwo Solution
@@ -212,7 +212,7 @@ function check_availability(e) {
 }
 ```
 
-Meaning hat we have another key called ```params``` where ```message``` equals to ```available```, Let's try it:
+Meaning that we have another key called ```params``` where ```message``` equals to ```available```, Let's try it:
 ```json
 {"message":"available","params":"1","token":"a68b0fc001510f6f662e7616802ebf6ac79463cad769fc6119d71758d30c0029"}
 ```
@@ -628,9 +628,9 @@ unbound (pid 71735) is running...
 
 **DNS rebinding attack:**
 
-So if we have access to unbound service we can make DNS rebinding attack, **I really recommend to see the following video from DEF CON 27 Conference [https://www.youtube.com/watch?v=y9-0lICNjOQ](https://www.youtube.com/watch?v=y9-0lICNjOQ) to understand how DNS rebinding attack works!**
+So if we have access to unbound service we can make DNS rebinding attack, **I recommend seeing the following video from DEF CON 27 Conference [https://www.youtube.com/watch?v=y9-0lICNjOQ](https://www.youtube.com/watch?v=y9-0lICNjOQ) to understand how DNS rebinding attack works!**
 
-So, first we need to use ```unbound-control``` to add a fake subdomain, pointing back to our local machine.
+So, first, we need to use ```unbound-control``` to add a fake subdomain, pointing back to our local machine.
 
 Next, We need to run [FakeDNS](https://github.com/Crypt0s/FakeDns) (Or [dnschef](https://github.com/iphelix/dnschef)) to catch the request from the box, and point it to our host, create a listener to see what it is doing.
 
@@ -676,7 +676,7 @@ do
 done
 ```
 
-Because we actually change the ip address to our host - we need also to listen to port 80 to get the requests:
+Because we change the IP address to our host - we need also to listen to port 80 to get the requests:
 ```console
 ┌─[evyatar@parrot]─[/hackthebox/CrossFitTwo/unbound_files]
 └──╼ $ sudo php -S 0.0.0.0:80
@@ -699,7 +699,7 @@ If we are trying to use this reset password token we got:
 
 And It's ok, The password reset isn't what we need to get access to - We need to make [CSRF attack](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/CSRF%20Injection/README.md) David's user.
 
-So by enumerating the JS files we can see the following file ```app-XXXXXXX.js``` which contains the follow:
+So by enumerating the JS files we can see the following file ```app-XXXXXXX.js``` which contains the following:
 ```javascript
 ...
 created() {
@@ -815,9 +815,9 @@ created() {
 ...
 ```
 
-Which is chat platform based on WebSocket.
+Which is a chat platform based on WebSocket.
 
-We can return to David's user HTML page with javascript that communicate with this WebSocket chat as client, when message received we will send the content to our web server.
+We can return to David's user HTML page with javascript that communicates with this WebSocket chat as a client, when the message is received we will send the content to our web server.
 
 So to do that, first we need to return the following HTML page from [password-reset.php](scripts/password-reset.php) ([socket.io download](https://www.cdnpkg.com/socket.io/file/socket.io.min.js/)):
 ```javascript
@@ -861,7 +861,7 @@ echo '<html>
 ?>
 ```
 
-Meaning that when David hit the page ```password-reset.php``` (Using DNS rebind attack) page we will return him the HTML above that communicate with chat WebSocket and send us the received messages on port 8000.
+Meaning that when David hits the page ```password-reset.php``` (Using DNS rebind attack) page we will return him the HTML above that communicate with chat WebSocket and send us the received messages on port 8000.
 
 Let's run the DNS rebinding again:
 ```console
@@ -1020,7 +1020,7 @@ ws.on('message', function message(data) {
 
 ![node_modules.JPG](images/node_modules.JPG)
 
-According that information we know that we can create new file on specific location which it loads while the script run (library injection vulnerability).
+According to that information, we know that we can create a new file on a specific location which it loads that the script runs (library injection vulnerability).
 
 Let's create new file ```index.js``` with [OpenBSD Reverse Shell](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#netcat-openbsd) as follow: 
 ```javascript
@@ -1074,7 +1074,7 @@ By decompile the ```main``` function on ```/usr/local/bin/log``` binary using ``
 
 ![decompile.JPG](images/decompile.JPG)
 
-We can see that we unable to see the function code, But of the left we can see which C library function/syscall are called, At this case It's ```puts``` function.
+We can see that we are unable to see the function code, But on the left we can see which C library functions/syscalls are called, In this case It's ```puts``` function.
 
 According that, We can change the variables/functions name on ```main``` function:
 ```C
@@ -1206,7 +1206,7 @@ And we got the ```root``` SSH private key, Let's try to use it:
 root@crossfit.htb's password: 
 ```
 
-SSH is still asking for a password after using ```root``` SSH Key.
+SSH is still asking for a password after using the ```root``` SSH Key.
 
 By reading the file ```/etc/login.conf``` we can see that ```auth-ssh``` required also [yubikey](https://www.yubico.com/) which is 2FA :
 ```yaml
