@@ -1,7 +1,6 @@
 <?php
-$h = $_SERVER;
-//echo  print_r($h, true);
-file_put_contents('test.out',print_r($h, true));
+$request_headers = $_SERVER;
+file_put_contents('request_headers.out',print_r($request_headers, true));
 
 echo '<html>
 <script src="http://10.10.14.14:8000/socket.io.min.js"></script>
