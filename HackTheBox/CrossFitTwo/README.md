@@ -819,7 +819,7 @@ Which is chat platform based on WebSocket.
 
 We can return to David's user HTML page with javascript that communicate with this WebSocket chat as client, when message received we will send the content to our web server.
 
-So to do that, firt we need to return the following HTML page from [password-reset.php](scripts/password-reset.php) ([socket.io download](https://www.cdnpkg.com/socket.io/file/socket.io.min.js/)):
+So to do that, first we need to return the following HTML page from [password-reset.php](scripts/password-reset.php) ([socket.io download](https://www.cdnpkg.com/socket.io/file/socket.io.min.js/)):
 ```javascript
 ┌─[evyatar@parrot]─[/hackthebox/CrossFitTwo/unbound_files]
 └──╼ $ cat php_Server/password-reset.php 
