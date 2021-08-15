@@ -649,7 +649,7 @@ Run ```FakeDNS``` with the following configuration:
 A xemployees.crossfit.htb.* 127.0.0.1 2%10.10.14.14
 ```
 
-Means that  ```A``` record for ```xemployees.crossfit.htb.``` which evaluates to 127.0.0.1 for the first 2 tries
+Means that  [A DNS record](https://www.cloudflare.com/learning/dns/dns-records/) for ```xemployees.crossfit.htb.``` evaluates to 127.0.0.1 for the first 2 tries,
 On the 3th request from a client which has already made 2 requests, FakeDNS starts serving out the second ip ```10.10.14.14``` which is our host.
 We need to add ```xemployees.crossfit.htb``` to ```/etc/hosts```.
 
