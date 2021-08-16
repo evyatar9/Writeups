@@ -49,7 +49,7 @@ Let's observe port 80:
 ![port80.JPG](images/port80.JPG)
 
 
-## Writer is still active machine - [Full writeup](Writer-Writeup.pdf) avaliable with root hash password only.
+## Writer is still active machine - [Full writeup](Writer-Writeup.pdf) available with root hash password only.
 
 Telegram: [@evyatar9](https://t.me/evyatar9)
 
