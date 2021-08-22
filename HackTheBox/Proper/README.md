@@ -13,7 +13,7 @@ To solve this machine, we begin by enumerating open services – finding only po
 
 After successful login we found [Time of check to time of use (TOCTOU)](https://hackernoon.com/time-of-check-to-time-of-use-toctou-a-race-condition-99c2311bd9fc) vulnerability, Exploiting the vulnerability and we can get in the machine as a ```web``` user.
 
-***Root:*** By analyzing ```C:\Program Files\Cleanup\server.exe```,```C:\Program Files\Cleanup\client.exe``` files we found ```CLEAN``` / ```RESTORE``` commands that are sent to pipe, By creating a link to root flag, We can simply ```CLEAN``` the link and then ```RESTORE``` the root flag to the same place.
+***Root:*** By analyzing ```C:\Program Files\Cleanup\server.exe```,```C:\Program Files\Cleanup\client.exe``` files we found ```CLEAN``` / ```RESTORE``` commands that are communicate using [named pipe](https://docs.microsoft.com/en-us/windows/win32/ipc/named-pipes), By creating a link to root flag, We can simply ```CLEAN``` the link and then ```RESTORE``` the root flag to the same place.
 
 
 ## Proper Solution
