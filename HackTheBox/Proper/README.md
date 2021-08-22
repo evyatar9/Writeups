@@ -9,9 +9,9 @@ Windows, 40 Base Points, Hard
 
 To solve this machine, we begin by enumerating open services – finding only port 80.
 
-***User:*** From the webserver, we find a SQL Injection vulnerable, Get credentials from database to login page.
+***User:*** From the webserver, we find a [SQL Injection](https://portswigger.net/web-security/sql-injection) vulnerable, Get credentials from database to login page.
 
-After successful login we found ```Time of check to time of use (TOCTOU)``` vulnerability, Exploiting the vulnerability and we can get in the machine as a ```web``` user.
+After successful login we found [Time of check to time of use (TOCTOU)](https://hackernoon.com/time-of-check-to-time-of-use-toctou-a-race-condition-99c2311bd9fc) vulnerability, Exploiting the vulnerability and we can get in the machine as a ```web``` user.
 
 ***Root:*** By analyzing ```C:\Program Files\Cleanup\server.exe```,```C:\Program Files\Cleanup\client.exe``` files we found ```CLEAN``` / ```RESTORE``` commands that are sent to pipe, By creating a link to root flag, We can simply ```CLEAN``` the link and then ```RESTORE``` the root flag to the same place.
 
