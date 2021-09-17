@@ -4,7 +4,15 @@ FreeBSD, 30 Base Points, Medium
 ## Machine
 
 ![Schooled.JPG](images/Schooled.JPG)
- 
+
+## TL;DR
+
+To solve this machine, we begin by enumerating open services using ```namp``` – finding ports ```80``` and ```22```.
+
+***<ins>User<ins>***: Register to Moodle system, Inject [XSS](https://owasp.org/www-community/attacks/xss/) payload into ```MoodleNet Profile``` field to get the teacher cookies, Using [CVE-2020-14321](https://github.com/HoangKien1020/CVE-2020-14321) to install a plugin which leads to a shell, Found DB credentials on ```/usr/local/www/apache24/data/moodle/config.php``` file, On DB we found hashed password of ```jamie``` user.
+
+***<ins>Root<ins>***: By running ```sudo -l``` we can see we have permission to install FreeBSD packages as root (```(ALL) NOPASSWD: /usr/sbin/pkg install``` , Create a custom package and install it using ```sudo pkg install --no-repo-update *.txz``` leads us to root shell.
+
 ## Schooled Solution
 
 ### User
