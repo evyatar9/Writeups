@@ -32,7 +32,7 @@ Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
 
 ```
 
-By observing port 80 we get the following web page (Redirected to [http://forge.htb/](http://forge.htb/)):
+By observing port 80 we get the following web page:
 
 ![port80.JPG](images/port80.JPG)
 
