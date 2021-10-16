@@ -5,7 +5,7 @@ Linux, 40 Base Points, Hard
 
 ![‏‏Monitors.JPG](images/Monitors.JPG)
  
- ### TL;DR;
+### TL;DR;
 
 To solve this machine, we begin by enumerating open services – finding only ports ```22``` and ```80```.
 
