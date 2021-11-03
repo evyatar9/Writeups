@@ -41,7 +41,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 By observing port ```8080``` we get a blank page.
 
-## Static is still active machine - [Full writeup](Static-Writeup.pdf) avaliable with root hash password only.
+## Static is still active machine - [Full writeup](Static-Writeup.pdf) available with root hash password only.
 
 Telegram: [@evyatar9](https://t.me/evyatar9)
 
