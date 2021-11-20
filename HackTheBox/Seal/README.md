@@ -10,7 +10,7 @@ Linux, 30 Base Points, Medium
 To solve this machine, we begin by enumerating open services – finding the ports ```22```,```443``` and ```8080```.
 
 
-***User 1:*** Found ```luis``` credentials (On ```seal_market``` commit```) to ```GitBucket``` portal,  From there, We found ```nginx``` configuration with [Nginx off-by-slash fail misconfiguration]( https://blog.detectify.com/2020/11/10/common-nginx-misconfigurations/), Use that to access to ```tomcat``` manager page to upload a reverse shell on ```war``` file and we get a shell as ```tomcat``` user.
+***User 1:*** Found ```luis``` credentials (On ```seal_market``` commit) to ```GitBucket``` portal,  From there, We found ```nginx``` configuration with [Nginx off-by-slash fail misconfiguration]( https://blog.detectify.com/2020/11/10/common-nginx-misconfigurations/), Use that to access to ```tomcat``` manager page to upload a reverse shell on ```war``` file and we get a shell as ```tomcat``` user.
 
 ***User 2:*** Found backup playbook (on ```/opt/backups/playbook/run.yml```) with ```copy_links=yes```, Create a file with symlink to ```/home/luis/.ssh/id_rsa``` to get the SSH private key of ```luis```.
 
