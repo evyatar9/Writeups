@@ -1,5 +1,5 @@
 # Pikaboo - HackTheBox - Writeup
-Linux, 30 Base Points, Medium
+Linux, 40 Base Points, Hard
 
 ## Machine
 
