@@ -57,7 +57,6 @@ Connection: keep-alive
 X-Forwarded-For: 127.0.0.1
 Upgrade-Insecure-Requests: 1
 
-
 ```
 
 And we get the flag:
