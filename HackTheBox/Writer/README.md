@@ -15,7 +15,7 @@ To solve this machine, we begin by enumerating open services using ```namp``` â€
 
 ***User 2***: Found group permission to ```/etc/postfix/disclaimer```, Using that we can add a disclaimer (which is bash script behind) to outgoing emails, Using that, we get a reverse shell by changing the disclaimer script with our reverse shell and we get the user ```john```.
 
-***Root***: Found write permission to file ```/etc/apt/apt.conf.d```, Creating a ```Pre-Invoke``` script which is a persistence technique to run code whenever ```apt``` is ran 
+***Root***: Found write permission to file ```/etc/apt/apt.conf.d```, Creating a ```Pre-Invoke``` script which is a persistence technique to run code whenever ```apt``` is ran, Using that we can get a reverse shell as ```root```. 
 
 ![pwn.JPG](images/pwn.JPG)
 
