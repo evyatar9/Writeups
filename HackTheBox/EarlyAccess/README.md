@@ -42,7 +42,7 @@ Service Info: Host: 172.18.0.102; OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
 
-Let's add ```earlyaccess.htb`` to hosts file and browse to [https://earlyaccess.htb/](https://earlyaccess.htb/):
+Let's add ```earlyaccess.htb``` to hosts file and browse to [https://earlyaccess.htb/](https://earlyaccess.htb/):
 
 ![port443.JPG](images/port443.JPG)
 
