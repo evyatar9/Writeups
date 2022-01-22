@@ -26,7 +26,6 @@ PORT   STATE SERVICE VERSION
 |_http-server-header: Apache/2.4.41 (Ubuntu)
 |_http-title: Play | Landing
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
 ```
 
 By observing port 80 we get the following web page:
