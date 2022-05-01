@@ -76,7 +76,7 @@ Run it:
 ```
 
 Now we can run our script:
-```consnole
+```console
 ┌─[evyatar@parrot]─[/mobile/click_me]
 └──╼ $ frida -U -f com.example.clickme -l frida_script.js --no-pause
      ____

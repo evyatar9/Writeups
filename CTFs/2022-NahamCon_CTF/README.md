@@ -2,5 +2,4 @@
 
 Writeups for [ NahamCon CTF 2022](https://ctf.nahamcon.com/)
 
-
-![info.JPG](images/‏‏info.JPG)
+![info.JPG](images/info.JPG)
