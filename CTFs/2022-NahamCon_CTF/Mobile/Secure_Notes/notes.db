@@ -1,0 +1,14 @@
+{
+  "notes": [
+    {
+      "id": 0,
+      "name": "Note 1",
+      "content": "My first secure note!"
+    },
+    {
+      "id": 1337,
+      "name": "flag",
+      "content": "flag{a5f6f2f861cb52b98ebedcc7c7094354}"
+    }
+  ]
+}

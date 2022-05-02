@@ -15,7 +15,7 @@ If we are trying to click on ```Get Flag``` we get:
 
 ![invalid.JPG](images/invalid.JPG)
 
-By decompiling the application using [jadx](https://github.com/skylot/jadx))we we can see the following methods on ```MainActivity``` class:
+By decompiling the application using [jadx](https://github.com/skylot/jadx)) we can see the following methods on ```MainActivity``` class:
 ```java
 public final void cookieViewClick(View view) {
 	int i = this.CLICKS + 1;
