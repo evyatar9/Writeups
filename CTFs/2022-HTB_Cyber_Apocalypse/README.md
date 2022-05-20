@@ -4,4 +4,4 @@ Writeups for [CTF HackTheBox 2021 Cyber Apocalypse 2022](https://ctf.hackthebox.
 
 5 DAY CTF!
 
-![info.jpg](images/info.jpg)
+![info.JPG](images/info.JPG)
