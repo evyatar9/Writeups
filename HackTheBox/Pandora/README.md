@@ -5,7 +5,7 @@ Linux, 20 Base Points, Easy
 
 ## Machine
 
-![‏‏pandora.JPG](images/pandora.JPG)
+![‏‏pandora.JPG](images/Pandora.JPG)
  
 ## TL;DR
 
