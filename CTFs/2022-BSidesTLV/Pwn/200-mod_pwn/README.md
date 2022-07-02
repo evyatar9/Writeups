@@ -7,7 +7,7 @@ Pwn, 200 Points
 
 Attached file [mod_pwn.tar.gz](./mod_pwn.tar.gz) 
 
-## Mod_Pwn Solution
+## mod_pwn Solution
 
 By extracting the tar.gz file we can the following files:
 ```console
