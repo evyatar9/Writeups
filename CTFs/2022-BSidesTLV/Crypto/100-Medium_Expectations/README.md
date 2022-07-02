@@ -7,7 +7,7 @@ Crypto, 100 Points
 
 Attached file [challenge.py](challenge.py) 
 
-## 404 Not Found Solution
+## Medium_Expectations Solution
 
 By observing the attached file we can see the following code:
 ```python
