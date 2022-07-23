@@ -5,7 +5,7 @@ Linux, 20 Base Points, Easy
 
 ## Machine
 
-![‏‏Trick.JPG](images/Trick.JPG)
+![‏‏RedPanda.JPG](images/RedPanda.JPG)
  
 ## RedPanda is still an active machine - [Full writeup](RedPanda-Writeup.pdf) available with root hash password only.
 
