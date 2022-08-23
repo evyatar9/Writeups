@@ -1,5 +1,5 @@
 # Support - HackTheBox - Writeup
-Linux, 30 Base Points, Easy
+Linux, 20 Base Points, Easy
 
 ![info.JPG](images/info.JPG)
 
