@@ -13,4 +13,4 @@ Telegram: [@evyatar9](https://t.me/evyatar9)
 
 Discord: [evyatar9#5800](https://discordapp.com/users/812805349815091251)
 
-![pwn.JPG](images/pwn.jpg)
+![pwn.JPG](images/pwn.JPG)
