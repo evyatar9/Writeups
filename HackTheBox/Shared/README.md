@@ -1,5 +1,5 @@
 # Shared - HackTheBox - Writeup
-Linux, 30 Base Points, Easy
+Linux, 30 Base Points, Medium
 
 ![info.JPG](images/info.JPG)
 
