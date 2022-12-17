@@ -5,7 +5,7 @@ Windows, 20 Base Points, Easy
 
 ## Machine
 
-![‏‏Support.JPG](images/Support.jpg)
+![‏‏Support.JPG](images/Support.JPG)
  
 ## TL;DR
 
@@ -13,7 +13,7 @@ Windows, 20 Base Points, Easy
 
 ***Root***: By running ```BloodHound``` we can see that ```support``` user has ``` AddAllowedToAct``` permission, Using that we create a new machine account and impersonate to ```Administrator``` user.
 
-![pwn.JPG](images/pwn.jpg)
+![pwn.JPG](images/pwn.JPG)
 
 
 ## Support Solution
