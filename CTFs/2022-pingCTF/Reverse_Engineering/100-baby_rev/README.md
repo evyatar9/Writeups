@@ -7,7 +7,7 @@ Reverse Engineering, 100 Points
  
 ## baby_rev Solution
 
-By observing the binary using IDA/Ghidra we can see the following on the ```main``` function:
+By observing the binary using IDA/Ghidra we can see the following ```main``` function:
 ```c
 int __cdecl main(int argc, const char **argv, const char **envp)
 {
@@ -57,7 +57,7 @@ __int64 __fastcall checkflag(_BYTE *a1)
 
 ```checkflag``` function checks if our input starts with ```ping{``` and ends with ```}```, then takes our input without the flag prefix/postfix to ```v5``` array, and then makes some operations for each character in our input.
 
-The most important part on this function is the ```if```statement:
+The most important part on this function is the following ```if```statement:
 ```c
 ...
 if ( 4 * (v5[j % 31] ^ KEYS[j % 14]) + 2 * j != FLAG[j] )
@@ -105,4 +105,4 @@ Run it:
 The flag is: r3v3rs1ng_c4n_b3_S0_muCH_FUN!!!
 ```
 
-And we get the flag ````ping{r3v3rs1ng_c4n_b3_S0_muCH_FUN!!!}```.
+And we get the flag ```ping{r3v3rs1ng_c4n_b3_S0_muCH_FUN!!!}```.
