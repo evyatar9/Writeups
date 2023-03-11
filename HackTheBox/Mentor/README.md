@@ -625,9 +625,3 @@ f25c835baa1c8249b2eece11e911118e
 ```
 
 And we get the root flag `f25c835baa1c8249b2eece11e911118e`.
-
-
-PDF Password
-```console
-$y$j9T$8yCyNLTeGfC2FDUDFE6sM1$e65o4d6wvakq5n8g3gyx.0R2UL1mAkx47MbbSvBE9a5
-```
