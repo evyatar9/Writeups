@@ -218,9 +218,3 @@ cat /root/root.txt
 ```
 
 And we get the root flag `7518627988bdb7f20ab724f2ddc09541`.
-
-
-PDF password
-```
-$6$4IguUssRBYl3/LvG$MfnFD1Y9saTrvw2OqA1VtqKxa7TsDt1kb2qsJw6inQ8GfmnqIrh32eqk9IMO4UR3fYG.TzbJeiFd7UOu1QlGR0
-```
