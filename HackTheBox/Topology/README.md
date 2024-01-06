@@ -204,8 +204,3 @@ And we get the flag `7d5860584ad753e374c1404a9d53bccd`:
 vdaisley@topology:/opt$ cat /tmp/flag 
 7d5860584ad753e374c1404a9d53bccd
 ```
-
-PDF password
-```console
-$6$P153wNg6DwlTSIv0$QFutCIjQWlJM24O6vyD5aoRv7kyvivOykonMDItV8rSqKpznqsmxfK7L51il6V7yF75qHE.Hkv6YLK25TSEle1
-```
