@@ -224,4 +224,7 @@ root@analytics:/tmp# cat /root/root.txt
 
 And we get the root flag `87fb1b0ec4b4f2d1d3005d2fb307655c`.
 
+PDF password 
+```
+$y$j9T$aVUkVU8LWFNEuXdwrOIJH.$jF8hy0vMzBJTvu/.HkzP0E4ZObo1I.frOPRVj2ktqM2
 ```
