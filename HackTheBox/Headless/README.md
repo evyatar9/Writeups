@@ -7,10 +7,6 @@ Linux, 20 Base Points, Easy
 
 ![‏‏Headless.JPG](images/Headless.JPG)
  
-## Machine
-
-![‏‏Headless.JPG](images/Headless.JPG)
- 
 ## Headless is still an active machine, A [Full writeup](Headless-Writeup.pdf) is available, Access to the writeup requires the root hash as the password.
 
 Telegram: [@evyatar9](https://t.me/evyatar9)
